@@ -32,11 +32,11 @@ RocketWPP.js is an aplication in Nodejs and React for create connectors with Wha
 
 ## _WPPConnect Server_
 
-# Run the comand in SERVER directory:
+### Run the comand in SERVER directory:
 
 $ npm run install
 
-# After installation, run the comand in SERVER directory:
+### After installation, run the comand in SERVER directory:
 
 $ pm2 start server.config.js
 
@@ -52,15 +52,15 @@ $ pm2 start server.config.js
 
 ## _WPPConnect Client_
 
-# Run the comand in CLIENT directory:
+### Run the comand in CLIENT directory:
 
 $ npm install
 
-# After, tun the comand in CLIENT directory:
+### After, tun the comand in CLIENT directory:
 
 $ npm run build
 
-# After create DIST paste, run the comand in root DIST directory: 
+### After create DIST paste, run the comand in root DIST directory: 
 
 $ pm2 serve --spa --port 5173
 
