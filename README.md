@@ -7,7 +7,8 @@
 |                                      |     |
 | ------------------------------------ | --- |
 | Multiple Sessions                    | ✔   |
-| Send **text, image, video and docs** | ✔   |
+| Send   text, image, video and docs   | ✔   |
+| Receive text, image, video and docs  | ✔   |
 | Receive/Send messages                | ✔   |
 | Open/Close Session                   | ✔   |
 | Join Group by Invite Code            | ✔   |
