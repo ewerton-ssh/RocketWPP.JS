@@ -2,6 +2,8 @@
 
 ![RocketWPP.JS](https://i.imgur.com/M7iSCgd.png)
 
+If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://chat.whatsapp.com/FaCeyAth56GIy2nWr0fDjt)
+
 ![Node.js Version](https://img.shields.io/badge/Node.js-10.20.0-green.svg)
 ![React Version](https://img.shields.io/badge/React-18.2.0-5ed3f3.svg)
 
