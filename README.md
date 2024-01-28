@@ -20,7 +20,7 @@ RocketWPP.JS is an aplication in Nodejs and React for create connectors with Wha
 | Open/Close Session                   | ✔   |
 | Join Group by Invite Code            | ✔   |
 
-## Require version install in your PC
+## Require version install in your Server
 - NPM 10.2.3
 - MongoDB Community 7.0.5
 - Node 10.20.0
