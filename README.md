@@ -77,5 +77,5 @@ $ pm2 serve --spa --port 5173
 
 ## _ChatBot_(Basic chatbot, modify for client side)
 
-For config the ChatBot JSON, don't modify field for objects, only strings,
+For config the ChatBot JSON, don't modify field for objects, only strings;
 For config the Chatbot JS, don't modify "default: return 'falseOption';", just case 1, 2, 3...
