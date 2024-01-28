@@ -24,6 +24,12 @@ RocketWPP.js is an aplication in Nodejs and React for create connectors with Wha
 - Node 10.20.0
 - Rocket.Chat 4.8.7
 
+## For user
+### server/.env
+- Adjuste MONGOURL uri(mongodb login has in URL).
+- Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome).
+- Adjuste HEADLESS true or false(pupeeteer control open or close web browser, set "false" if you use proxy).
+
 ## _WPPConnect Server_
 
 ### Libraries used
