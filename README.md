@@ -2,6 +2,8 @@
 
 ![RocketWPP.JS](https://i.imgur.com/M7iSCgd.png)
 
+RocketWPP.js is an aplication in Nodejs and React for create connectors with Whatsapp and Rocket.Chat
+
 ##Features
 
 |                                      |     |
