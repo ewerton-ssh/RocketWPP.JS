@@ -4,6 +4,7 @@
 
 ##Features
 
+|                                      |     |
 | ------------------------------------ | --- |
 | Multiple Sessions                    | ✔   |
 | Send **text, image, video and docs** | ✔   |
