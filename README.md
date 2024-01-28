@@ -4,3 +4,12 @@
 
 ## _WPPConnect Server_
 
+### Libraries used
+
+-Whatsapp.web-js
+-Axios
+-Cors
+-Dotenv
+-Express
+-SocketIO
+-Mongodb
