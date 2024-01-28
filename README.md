@@ -3,7 +3,7 @@
 ![RocketWPP.JS](https://i.imgur.com/M7iSCgd.png)
 
 ![Node.js Version](https://img.shields.io/badge/Node.js-10.20.0-green.svg)
-![Node.js Version](https://img.shields.io/badge/React-18.2.0-5ed3f3.svg)
+![React Version](https://img.shields.io/badge/React-18.2.0-5ed3f3.svg)
 
 RocketWPP.js is an aplication in Nodejs and React for create connectors with Whatsapp and Rocket.Chat.
 
@@ -18,6 +18,11 @@ RocketWPP.js is an aplication in Nodejs and React for create connectors with Wha
 | Open/Close Session                   | ✔   |
 | Join Group by Invite Code            | ✔   |
 
+## Require min version for
+-NPM 10.2.3
+-MongoDB Community 7.0.5
+-Node 10.20.0
+
 ## _WPPConnect Server_
 
 ### Libraries used
@@ -27,5 +32,17 @@ RocketWPP.js is an aplication in Nodejs and React for create connectors with Wha
 - Cors
 - Dotenv
 - Express
-- SocketIO
+- Socket.IO
 - Mongodb
+
+## _WPPConnect Client_
+
+### Libraries used
+
+- Axios
+- React Icons
+- React Loading
+- React Qr Code
+- React Router Dom
+- React Toastify
+- Socket.IO Client
