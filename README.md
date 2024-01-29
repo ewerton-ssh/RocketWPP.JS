@@ -84,3 +84,7 @@ $ pm2 serve --spa --port 5173
 For config the ChatBot JSON, don't modify field for objects, only strings  
 
 For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, just case 1, 2, 3...
+
+## Congratulations and credits
+For Lib Whatsapp.web-js
+- [@pedroslopez](https://github.com/pedroslopez)
