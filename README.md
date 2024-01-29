@@ -17,7 +17,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 | Receive text, image, video and docs  | ✔   |
 | Receive/Send messages                | ✔   |
 | Open/Close Session                   | ✔   |
-| Join Group by Invite Code            | ✔   |
+| Join Group by invicted               | ✔   |
 
 ## Require version install in your Server
 - NPM 10.2.3
