@@ -19,7 +19,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 | Open/Close Session                   | ✔   |
 | Join Group by invicted               | ✔   |
 
-## Require version install in your Server
+## Requires version installed on your server
 - NPM 10.2.3
 - MongoDB Community 7.0.5
 - Node 10.20.0
