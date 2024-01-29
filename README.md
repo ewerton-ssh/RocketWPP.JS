@@ -31,7 +31,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome).
 - Adjuste HEADLESS true or false(pupeeteer control open or close web browser, set "false" if you use proxy).
 
-## _WPPConnect Server_
+## _RocketWPP.JS Server_
 
 ### Run the comand in SERVER directory:
 
@@ -51,7 +51,7 @@ $ pm2 start server.config.js
 - Socket.IO
 - Mongodb
 
-## _WPPConnect Client_
+## _RocketWPP.JS Client_
 
 ### Run the comand in CLIENT directory:
 
