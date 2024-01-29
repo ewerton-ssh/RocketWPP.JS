@@ -19,7 +19,7 @@ const options = require('./bot_dialogs/options');
 // MongoDB Config
 const uri = process.env.MONGOURL;
 const dbclient = new MongoClient(uri);
-const database = dbclient.db('rocketjs');
+const database = dbclient.db(process.env.DBNAME);
 const collectionConnectors = database.collection('connectors');
 const collectionSettings = database.collection('settings');
 
