@@ -25,6 +25,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - MongoDB Community 7.0.5
 - Node 10.20.0
 - Rocket.Chat 4.8.7
+- PM2 5.3.1
 
 ## For user
 ### server/.env
