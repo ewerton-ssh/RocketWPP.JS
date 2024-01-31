@@ -1,0 +1,13 @@
+2024/01/31-15:34:12.753 2a4c Reusing MANIFEST C:\Users\ewerton.lima\documents\rocketwpp.js\server\.wwebjs_auth\session-5545998325806\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/01/31-15:34:12.755 2a4c Recovering log #478
+2024/01/31-15:34:12.767 2a4c Reusing old log C:\Users\ewerton.lima\documents\rocketwpp.js\server\.wwebjs_auth\session-5545998325806\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000478.log 
+2024/01/31-15:34:23.360 5344 Level-0 table #483: started
+2024/01/31-15:34:23.366 5344 Level-0 table #483: 110599 bytes OK
+2024/01/31-15:34:23.368 5344 Delete type=0 #478
+2024/01/31-15:34:23.369 2a4c Manual compaction at level-0 from '\x00\xa1\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\xa2\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/01/31-15:34:24.410 4008 Compacting 1@1 + 1@2 files
+2024/01/31-15:34:24.464 4008 Generated table #484@1: 56621 keys, 1781652 bytes
+2024/01/31-15:34:24.464 4008 Compacted 1@1 + 1@2 files => 1781652 bytes
+2024/01/31-15:34:24.466 4008 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/01/31-15:34:24.466 4008 Delete type=2 #480
+2024/01/31-15:34:24.466 4008 Delete type=2 #483

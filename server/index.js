@@ -15,6 +15,7 @@ const { exec } = require('child_process');
 // Bot Config
 const textbot = require('./bot_dialogs/main.json');
 const options = require('./bot_dialogs/options');
+const headless = require('./headless.json');
 
 // MongoDB Config
 const uri = process.env.MONGOURL;
@@ -47,7 +48,7 @@ const createWhatsappSession = (id, socket) => {
                 '--disable-web-security',
                 '--disable-features=IsolateOrigins,site-per-process',
             ],
-            headless: process.env.HEADLESS,
+            headless: headless.STATE,
             timeout: 30000,
         },
         authStrategy: new LocalAuth({
@@ -71,6 +72,79 @@ const createWhatsappSession = (id, socket) => {
         });
         active = true;
 
+        // Start Chat
+        app.post('/start-chat', (req, res) => {
+
+            let requestData = '';
+
+            req.on('data', (chunk) => {
+                requestData += chunk;
+            });
+
+            req.on('end', () => {
+                try {
+                    const data = JSON.parse(requestData);
+                    const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
+                    if (match) {
+                        const phoneNumber = match[1] + "@c.us";
+                        if (match[2]) {
+                            const messageText = match[2];
+                            async function sendMessage() {
+                                const configData = await collectionSettings.findOne({ _id: 1234567890 });
+                                const adress = configData.ip;
+                                const headers = {
+                                    'Content-Type': 'application/json',
+                                    'X-Auth-Token': configData.token,
+                                    'X-User-Id': configData.id,
+                                };
+                                // Send Whatsapp Message
+                                try {
+                                    await client.sendMessage(phoneNumber, `*${data.user_name}*\n${messageText}`);
+                                } catch (error) {
+                                    await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
+                                        channel: "general",
+                                        text: `🤖\n_Invalid number or comand, please check the number_ ${phoneNumber}!`
+                                    }, {
+                                        headers: headers
+                                    })
+                                        .then(response => {
+                                        })
+                                        .catch(error => {
+                                        });
+                                    return;
+                                };
+                                // Create visitor
+                                await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
+                                    visitor: {
+                                        token: phoneNumber,
+                                        name: phoneNumber,
+                                        username: phoneNumber,
+                                        phone: phoneNumber,
+                                    }
+                                },
+                                    {
+                                        headers: headers
+                                    })
+                                    .then(response => {
+                                    })
+                                    .catch(error => {
+                                    });
+                                // Create room
+                                await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
+                            };
+                            sendMessage();
+                        };
+                        res.status(200).send('Sucess');
+                    } else {
+                        res.status(400).send("Bad Request");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    res.status(500).send("Internal Server Error");
+                }
+            });
+        });
+
         // Webhook
         app.post('/rocketjs-webhook', (req, res) => {
 
@@ -87,10 +161,14 @@ const createWhatsappSession = (id, socket) => {
                     async function rocketSendMessage() {
                         if (messageData && messageData.length > 0 && messageData[0].u) {
                             const data = await collectionSettings.findOne({ _id: 1234567890 });
-                            const adress = data.ip;
+                            //const adress = data.ip;
                             if (messageData[0].closingMessage === true) {
-                                await client.sendMessage(visitorData.phone[0].phoneNumber, textbot.encerramento);
-                                await axios.delete(`http://${adress}/api/v1/livechat/visitor/${visitorData.token}`);
+                                try {
+                                    await client.sendMessage(visitorData.phone[0].phoneNumber, textbot.encerramento);
+                                } catch (error) {
+                                    return;
+                                }
+                                // Delete user on close chat. await axios.delete(`http://${adress}/api/v1/livechat/visitor/${visitorData.token}`);
                                 return;
                             } else {
                                 if (messageData[0].msg === '') {
@@ -274,14 +352,14 @@ const createWhatsappSession = (id, socket) => {
                         if (getInfoChat.isGroup) {
                             await axios.get(`http://${adress}/api/v1/livechat/room?token=${getInfoChat.name}`)
                                 .then(response => {
-                                    async function messageResponse(){
+                                    async function messageResponse() {
                                         await message.reply(textbot.sucesso);
                                     };
                                     messageResponse();
                                 })
                                 .catch(error => {
-                                    async function errorResponse(){
-                                        if(!error.response.data.success){
+                                    async function errorResponse() {
+                                        if (!error.response.data.success) {
                                             await message.reply(textbot.sem_atendimento);
                                         };
                                     };
@@ -290,14 +368,14 @@ const createWhatsappSession = (id, socket) => {
                         } else {
                             await axios.get(`http://${adress}/api/v1/livechat/room?token=${number}`)
                                 .then(response => {
-                                    async function messageResponse(){
+                                    async function messageResponse() {
                                         await message.reply(textbot.sucesso);
                                     };
                                     messageResponse();
                                 })
                                 .catch(error => {
-                                    async function errorResponse(){
-                                        if(!error.response.data.success){
+                                    async function errorResponse() {
+                                        if (!error.response.data.success) {
                                             await message.reply(textbot.sem_atendimento);
                                         };
                                     };
@@ -557,22 +635,22 @@ io.on("connection", (socket) => {
 
     // Retart pm2 all process function
 
-    async function retartPm2Process(){
+    async function retartPm2Process() {
         const command = 'pm2 restart all';
 
         exec(command, (erro, stdout, stderr) => {
             if (erro) {
-              console.error(`Comand error: ${erro.message}`);
-              return;
+                console.error(`Comand error: ${erro.message}`);
+                return;
             }
-            
+
             if (stderr) {
-              console.error(`Stderr error: ${stderr}`);
-              return;
+                console.error(`Stderr error: ${stderr}`);
+                return;
             }
-          
+
             console.log(`command log:\n${stdout}`);
-          });
+        });
     }
 
     // Read and edit bot archives
