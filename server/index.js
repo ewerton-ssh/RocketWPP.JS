@@ -677,7 +677,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("editOptions", async (data) => {
-        const newOptions = data.trim(); // Remover espaços em branco extras
+        const newOptions = data.trim();
         fs.readFile(optionsFilePath, 'utf-8', (err, obj) => {
             if (err) {
                 return;
