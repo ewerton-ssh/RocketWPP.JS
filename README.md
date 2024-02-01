@@ -5,6 +5,7 @@
 ![Node.js Version](https://img.shields.io/badge/Node.js-20.10.0-green.svg)
 ![React Version](https://img.shields.io/badge/React-18.2.0-5ed3f3.svg)
 ![MongoDB Version](https://img.shields.io/badge/MongoDB%20Community-7.0.5-00ed64.svg)
+![PM2 Version](https://img.shields.io/badge/PM2-5.3.1-5f05ec.svg)
 
 RocketWPP.JS is an aplication in Nodejs and React for create connectors with Whatsapp and Rocket.Chat.  
 
