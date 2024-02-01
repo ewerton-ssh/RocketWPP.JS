@@ -1,1 +1,7 @@
 node_modules
+.wwebjs_auth
+.wwebjs_cache
+whatsapp-images
+whatsapp-audios
+whatsapp-videos
+whatsapp-documents
