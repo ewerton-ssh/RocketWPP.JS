@@ -15,7 +15,6 @@ const { exec } = require('child_process');
 // Bot Config
 const textbot = require('./bot_dialogs/main.json');
 const options = require('./bot_dialogs/options');
-const headless = require('./headless.json');
 
 // MongoDB Config
 const uri = process.env.MONGOURL;
