@@ -306,7 +306,11 @@ const createWhatsappSession = (id, socket) => {
                 .catch(error => {
                 });
         }
+        
+        // Chose the department or bot response
+        const chosedOption = options(body);
 
+        // Header of visitors
         if (getInfoChat.isGroup) {
             nickSender = `(${getInfoChat.name})`;
             visitorHeader = {
@@ -314,6 +318,7 @@ const createWhatsappSession = (id, socket) => {
                 name: nickSender,
                 username: number,
                 phone: number,
+                department: chosedOption
             }
         } else {
             nickSender = message._data.notifyName;
@@ -322,6 +327,7 @@ const createWhatsappSession = (id, socket) => {
                 name: nickSender,
                 username: number,
                 phone: number,
+                department: chosedOption
             }
         }
 
@@ -340,7 +346,7 @@ const createWhatsappSession = (id, socket) => {
                     });
                 await message.reply(textbot.mensagem_texto);
             } else if (data === 'closedRoom') {
-                const chosedOption = options(body);
+                
                 if (chosedOption === 'falseOption') {
                     await message.reply(textbot.erro);
                 } else if (chosedOption === 'resposta_bot') {
