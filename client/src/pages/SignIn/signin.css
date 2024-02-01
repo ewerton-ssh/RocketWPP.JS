@@ -27,7 +27,7 @@ body{
     background-size: 50%;
     background-repeat: no-repeat;
     left: -250px;
-    top: -240px;
+    top: -220px;
 }
 .shape:last-child{
     background-image: url("../../assets/rocketchat_icon.png");
