@@ -48,7 +48,7 @@ const createWhatsappSession = (id, socket) => {
                 '--disable-web-security',
                 '--disable-features=IsolateOrigins,site-per-process',
             ],
-            headless: process.env.HEADLESS,
+            headless: Boolean(process.env.HEADLESS),
             timeout: 30000,
         },
         authStrategy: new LocalAuth({
