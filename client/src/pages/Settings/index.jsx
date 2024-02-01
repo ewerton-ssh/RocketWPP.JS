@@ -51,6 +51,7 @@ export default function Settings() {
                         <label>IP/Port</label>
                         <input type="text"  placeholder='IP/Port' value={ip} onChange={(e) => setIp(e.target.value)}/>
                         <p>Webhook: http://adress:port/rocketjs-webhook</p>
+                        <p>For integration, use "enviawpp number, msg</p>
                         <button className='loginButton' type="submit" onClick={handleSettings}>Save</button>
                     </form>
                 </div>
