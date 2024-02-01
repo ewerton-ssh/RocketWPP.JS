@@ -22,7 +22,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 ## Requires version installed on your server
 - NPM 10.2.3
 - MongoDB Community 7.0.5
-- Node 10.20.0
+- Node 20.10.0
 - Rocket.Chat 4.8.7
 - PM2 5.3.1
 
