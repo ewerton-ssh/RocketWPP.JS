@@ -102,7 +102,7 @@ const createWhatsappSession = (id, socket) => {
                                 } catch (error) {
                                     await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
                                         channel: "general",
-                                        text: `🤖\n_Invalid number or comand, please check the number_ ${phoneNumber}!`
+                                        text: `🤖\n_${textbot.start_chat_error}_ ${phoneNumber}!`
                                     }, {
                                         headers: headers
                                     })
