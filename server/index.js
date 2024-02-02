@@ -98,7 +98,7 @@ const createWhatsappSession = (id, socket) => {
                                 };
                                 // Send Whatsapp Message
                                 try {
-                                    await client.sendMessage(phoneNumber, `*${data.user_name}*\n${messageText}`);
+                                    await client.sendMessage(phoneNumber, `${messageText}`);
                                 } catch (error) {
                                     await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
                                         channel: "general",
