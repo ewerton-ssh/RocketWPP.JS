@@ -40,7 +40,8 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 Follow the form below and avoid mistakes.
 
 ### Case Dialogs(JSON):
-{<br/>
+```json
+{
   "welcome_text": "Bem-vindo a EMPRESA Teste! Escolha uma opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Departarment 2",<br/>
   "bot_response": "Segue nossos horarios no link:",<br/>
   "error": "Opção invalida, por gentileza digite apenas os números abaixo, opção:\n*1* - HORARIOS\n*2* - SAC\n*3* - TI",<br/>
@@ -48,7 +49,8 @@ Follow the form below and avoid mistakes.
   "no_service": "Desculpe, mas no momento não temos ninguém no setor para atende-lo, tente outro setor por gentileza.",<br/>
   "close": "Atendimento encerrado!",<br/>
   "start_chat_error": "_Invalid number or comand, please check the number_"<br/>
-}<br/>
+}
+```
 
 ### Case Options (JavaScript):
 ```javascript
