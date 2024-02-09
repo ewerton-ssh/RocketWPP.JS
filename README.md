@@ -52,16 +52,16 @@ Follow the form below and avoid mistakes.
 
 ### Case Options (JavaScript):
 function options(option) {<br/>
-    switch (option) {<br/>
-        case '1':<br/>
-            return 'bot_response';<br/>
-        case '2':<br/>
-            return 'department_1';<br/>
-        case '3':<br/>
-            return 'department_2';<br/>
-        default:<br/>
-            return 'falseOption';<br/>
-    }<br/>
+  switch (option) {<br/>
+    case '1':<br/>
+      return 'bot_response';<br/>
+    case '2':<br/>
+      return 'department_1';<br/>
+    case '3':<br/>
+      return 'department_2';<br/>
+    default:<br/>
+      return 'falseOption';<br/>
+  }<br/>
 }<br/>
 
 ## _RocketWPP.JS Server_
