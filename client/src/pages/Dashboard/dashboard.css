@@ -97,8 +97,26 @@ body {
 
 
 .delete {
+  font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
   height: 20px;
+  width: auto;
+  color: #000;
+  font-size: 12px;
+  text-decoration: none;
+  margin: 0;
+  font-weight: bold;
+}
+
+.editbot{
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  height: 20px;
+  width: auto;
+  color: #000;
+  font-size: 12px;
+  text-decoration: none;
+  margin: 0;
 }
 
 .container {

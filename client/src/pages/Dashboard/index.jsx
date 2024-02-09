@@ -8,6 +8,7 @@ import { TbMoodEmptyFilled } from "react-icons/tb";
 import RedirectTimeout from "../../components/RedirectTimeout";
 import ReactLoading from 'react-loading';
 import { StatusContext } from "../../contexts/status";
+import { BotContext } from "../../contexts/chatbot";
 import { toast } from "react-toastify";
 
 export default function Dashboard() {
@@ -15,6 +16,7 @@ export default function Dashboard() {
   const [listConnectors, setListConnectors] = useState([]);
   
   const { isReady, loading, setLoading } = useContext(StatusContext);
+  const { chatId } = useContext(BotContext);
 
   useEffect(() => {
     const connectorsCallback = (data) => {
@@ -22,6 +24,12 @@ export default function Dashboard() {
     }
     socket.emit("listConnectors");
     socket.on("connectors", connectorsCallback);
+    socket.on("botsettings", () => {
+      toast.error("Configure all bot's first!");
+      setTimeout(() => {
+        window.location.reload();
+      }, "4000");
+  })
     return () => {
       socket.off("connectors", connectorsCallback);
     };
@@ -51,7 +59,7 @@ export default function Dashboard() {
       </Link>
       <div className="container">
         <h2>Connectors</h2>
-        <button className="reload" onClick={reload} disabled={isReady} ><IoReloadSharp /></button>
+        <button className="reload" onClick={reload} disabled={isReady} ><IoReloadSharp/></button>
         <ul className="responsive-table">
           {listConnectors.length === 0 ? (
             <div className="empty">
@@ -63,9 +71,12 @@ export default function Dashboard() {
                 <div className="col col-1" data-label="department">Department: {connector.department}</div>
                 <div className="col col-2" data-label="number">Number: {connector.number}</div>
                 <div className="col col-3" data-label="status">Status: <span style={isReady && !loading ? { backgroundColor: "green" } : { backgroundColor: "red" }}>{isReady && !loading ? 'Active' : 'Dead'}</span></div>
+                <div className="col col-4" data-label="editbot">
+                  <button className="editbot" onClick={() => chatId(connector.number)}><Link className="editbot" to='/bot'>CHATBOT</Link></button>
+                </div>
                 <div className="col col-4" data-label="delete" onClick={(() => deleteConnector(connector._id, connector.number))}>
                   <div className="delete">
-                  {!loading ? <button>Delete</button> :
+                  {!loading ? <button className="delete">DELETE</button> :
                     <div>
                       <RedirectTimeout
                         to="/"

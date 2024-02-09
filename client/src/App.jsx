@@ -4,27 +4,30 @@ import AuthProvider from './contexts/auth';
 import StatusProvider from './contexts/status';
 import Routes from './routes';
 import { Slide, ToastContainer } from 'react-toastify';
+import BotProvider from './contexts/chatbot';
 
 function App() {
   return (
     <AuthProvider>
       <StatusProvider>
-      <BrowserRouter>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          transition={Slide}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-        <Routes />
-      </BrowserRouter>
+        <BotProvider>
+          <BrowserRouter>
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              transition={Slide}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+            />
+            <Routes />
+          </BrowserRouter>
+        </BotProvider>
       </StatusProvider>
     </AuthProvider>
   );

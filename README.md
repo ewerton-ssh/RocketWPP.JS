@@ -36,6 +36,34 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - Adjuste HEADLESS true or false(pupeeteer control open or close web browser, set "false" if you use proxy).
 - Adjuste DBNAME for diferent names case use multiple instances.
 
+## Chatbot syntax save
+Follow the form below and avoid mistakes.
+
+### Case Dialogs(JSON):
+{
+  "welcome_text": "Bem-vindo a EMPRESA Teste! Escolha uma opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Departarment 2",
+  "bot_response": "Segue nossos horarios no link:",
+  "error": "Opção invalida, por gentileza digite apenas os números abaixo, opção:\n*1* - HORARIOS\n*2* - SAC\n*3* - TI",
+  "success": "Ok, já transferimos para o setor selecionado, por gentileza aguarde o atendimento 😉",
+  "no_service": "Desculpe, mas no momento não temos ninguém no setor para atende-lo, tente outro setor por gentileza.",
+  "close": "Atendimento encerrado!",
+  "start_chat_error": "_Invalid number or comand, please check the number_"
+}
+
+### Case Options (JavaScript):
+function options(option) {
+    switch (option) {
+        case '1':
+            return 'bot_response';
+        case '2':
+            return 'department_1';
+        case '3':
+            return 'department_2';
+        default:
+            return 'falseOption';
+    }
+}
+
 ## _RocketWPP.JS Server_
 
 ### Run the comand in SERVER directory:

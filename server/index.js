@@ -13,8 +13,8 @@ const axios = require('axios');
 const { exec } = require('child_process');
 
 // Bot Config
-const textbot = require('./bot_dialogs/main.json');
-const options = require('./bot_dialogs/options');
+//const textbot = require('./bot_dialogs/main.json');
+//const options = require('./bot_dialogs/options');
 
 // MongoDB Config
 const uri = process.env.MONGOURL;
@@ -34,10 +34,28 @@ server.listen(port, () => {
     console.log("Listening on *:", port);
 });
 
+// .env Healdess define
+const headless = process.env.HEADLESS === 'true';
+
 // Whatsapp-web.js
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
-const createWhatsappSession = (id, socket) => {
+const createWhatsappSession = async (id, socket) => {
+    // Chatbot
+    const botPath = await collectionConnectors.findOne({number: id});
+    
+    if(botPath.botText === undefined){
+        socket.emit("botsettings");
+        return;
+    }else if(botPath.botOptions === undefined){
+        socket.emit("botsettings");
+        return;
+    }
+
+    const botChat = botPath.botText;
+    const options = eval('(' + botPath.botOptions + ')');
+
+    // New Client
     const client = new Client({
         puppeteer: {
             executablePath: process.env.CHROME_EXECUTABLE_PATH,
@@ -47,7 +65,7 @@ const createWhatsappSession = (id, socket) => {
                 '--disable-web-security',
                 '--disable-features=IsolateOrigins,site-per-process',
             ],
-            headless: Boolean(process.env.HEADLESS),
+            headless: headless,
             timeout: 30000,
         },
         authStrategy: new LocalAuth({
@@ -102,7 +120,7 @@ const createWhatsappSession = (id, socket) => {
                                 } catch (error) {
                                     await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
                                         channel: "general",
-                                        text: `🤖\n_${textbot.start_chat_error}_ ${phoneNumber}!`
+                                        text: `🤖\n_${botChat.start_chat_error}_ ${phoneNumber}!`
                                     }, {
                                         headers: headers
                                     })
@@ -163,7 +181,7 @@ const createWhatsappSession = (id, socket) => {
                             //const adress = data.ip;
                             if (messageData[0].closingMessage === true) {
                                 try {
-                                    await client.sendMessage(visitorData.phone[0].phoneNumber, textbot.encerramento);
+                                    await client.sendMessage(visitorData.phone[0].phoneNumber, botChat.close);
                                 } catch (error) {
                                     return;
                                 }
@@ -344,13 +362,12 @@ const createWhatsappSession = (id, socket) => {
                     })
                     .catch(error => {
                     });
-                await message.reply(textbot.mensagem_texto);
+                await message.reply(botChat.welcome_text);
             } else if (data === 'closedRoom') {
-                
                 if (chosedOption === 'falseOption') {
-                    await message.reply(textbot.erro);
-                } else if (chosedOption === 'resposta_bot') {
-                    await message.reply(textbot.resposta_bot);
+                    await message.reply(botChat.error);
+                } else if (chosedOption === 'respost_bot') {
+                    await message.reply(botChat.bot_response);
                 } else {
                     // Create Room
                     async function createRoom() {
@@ -358,14 +375,14 @@ const createWhatsappSession = (id, socket) => {
                             await axios.get(`http://${adress}/api/v1/livechat/room?token=${getInfoChat.name}`)
                                 .then(response => {
                                     async function messageResponse() {
-                                        await message.reply(textbot.sucesso);
+                                        await message.reply(botChat.success);
                                     };
                                     messageResponse();
                                 })
                                 .catch(error => {
                                     async function errorResponse() {
                                         if (!error.response.data.success) {
-                                            await message.reply(textbot.sem_atendimento);
+                                            await message.reply(botChat.no_service);
                                         };
                                     };
                                     errorResponse();
@@ -374,14 +391,14 @@ const createWhatsappSession = (id, socket) => {
                             await axios.get(`http://${adress}/api/v1/livechat/room?token=${number}`)
                                 .then(response => {
                                     async function messageResponse() {
-                                        await message.reply(textbot.sucesso);
+                                        await message.reply(botChat.success);
                                     };
                                     messageResponse();
                                 })
                                 .catch(error => {
                                     async function errorResponse() {
                                         if (!error.response.data.success) {
-                                            await message.reply(textbot.sem_atendimento);
+                                            await message.reply(botChat.no_service);
                                         };
                                     };
                                     errorResponse();
@@ -538,7 +555,6 @@ const createWhatsappSession = (id, socket) => {
     client.initialize();
 };
 
-
 // Socket io connection
 const io = new Server(server, {
     cors: {
@@ -660,50 +676,23 @@ io.on("connection", (socket) => {
 
     // Read and edit bot archives
 
-    const dialogsFilePath = './bot_dialogs/main.json';
-    const optionsFilePath = './bot_dialogs/options.js';
-
-    socket.on("botAndOptions", async () => {
-        socket.emit("textbot", (textbot));
-        socket.emit("botoptions", (`${options}`));
-    });
-
-    socket.on("editDialogs", async (data) => {
-        const newContent = data;
-
-        fs.writeFile(dialogsFilePath, newContent, 'utf8', (err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
+    socket.on("botAndOptions", async (numberId) => {
+        const botPath = await collectionConnectors.findOne({number: numberId});
+        if(botPath.botText !== null && botPath.botOptions !== null){
+            socket.emit("textbot", (botPath.botText));
+            socket.emit("botoptions", (botPath.botOptions));
+        }
+        
+        socket.on("insertText", async (value) => {
+            await collectionConnectors.updateOne({number: numberId}, {$set: {botText: JSON.parse(value)}});
             socket.emit("sucess");
-            retartPm2Process()
+            retartPm2Process();
         });
-    });
 
-    socket.on("editOptions", async (data) => {
-        const newOptions = data.trim();
-        fs.readFile(optionsFilePath, 'utf-8', (err, obj) => {
-            if (err) {
-                return;
-            }
-            const regex = /(function options[\s\S]*?\{)([\s\S]*?)(\}\s*};)/m;
-            let newContent;
-            if (newOptions.startsWith("function options")) {
-                newContent = newOptions;
-            } else {
-                newContent = obj.replace(regex, `$1 ${newOptions} $3`);
-            }
-            if (!newContent.includes("module.exports")) {
-                newContent += "\n\nmodule.exports = options;";
-            }
-            fs.writeFile(optionsFilePath, newContent, 'utf8', (err) => {
-                if (err) {
-                    return;
-                }
-                socket.emit("sucess");
-                retartPm2Process()
-            });
+        socket.on("insertOptions", async (value) => {
+            await collectionConnectors.updateOne({number: numberId}, {$set: {botOptions: value}});
+            socket.emit("sucess");
+            retartPm2Process();
         });
     });
 });

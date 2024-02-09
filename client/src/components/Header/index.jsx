@@ -33,9 +33,6 @@ export default function Header() {
                 <Link to='/settings'>
                     Settings
                 </Link>
-                <Link to='/bot' >
-                    ChatBot
-                </Link>
                 <Link to='/' onClick={signOut} >
                     Logout
                 </Link>
