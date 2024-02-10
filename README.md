@@ -59,9 +59,9 @@ function options(option) {
         case '1':
             return 'bot_response';
         case '2':
-            return 'Department 1';
+            return 'Department_1';
         case '3':
-            return 'Departarment 2';
+            return 'Departarment_2';
         default:
             return 'falseOption';
     }
