@@ -44,7 +44,7 @@ Follow the form below and avoid mistakes.
 {
   "welcome_text": "Bem-vindo a EMPRESA Teste! Escolha uma opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Departarment 2",
   "bot_response": "Segue nossos horarios no link:",
-  "error": "Opção invalida, por gentileza digite apenas os números abaixo, opção:\n*1* - HORARIOS\n*2* - SAC\n*3* - TI",
+  "error": "Opção invalida, por gentileza digite apenas os números abaixo, opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Departarment 2",
   "success": "Ok, já transferimos para o setor selecionado, por gentileza aguarde o atendimento 😉",
   "no_service": "Desculpe, mas no momento não temos ninguém no setor para atende-lo, tente outro setor por gentileza.",
   "close": "Atendimento encerrado!",
@@ -59,9 +59,9 @@ function options(option) {
         case '1':
             return 'bot_response';
         case '2':
-            return 'SAC';
+            return 'Department 1';
         case '3':
-            return 'TI';
+            return 'Departarment 2';
         default:
             return 'falseOption';
     }
