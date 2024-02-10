@@ -1,14 +1,17 @@
 import Header from "../../components/Header";
 import "./add.css";
 import socket from "../../services/socketio";
-import { useEffect, useState} from "react";
+import { useEffect, useState, useContext} from "react";
 import { toast } from "react-toastify";
 import QRCode from "react-qr-code";
 import ReactLoading from 'react-loading';
 import { FcApproval } from "react-icons/fc";
 import RedirectTimeout from "../../components/RedirectTimeout";
+import { BotContext } from "../../contexts/chatbot";
 
 export default function Add() {
+  const { chatId } = useContext(BotContext);
+
   const [number, setNumber] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [loading, setLoading] = useState('');
@@ -23,7 +26,6 @@ export default function Add() {
     number: number,
     department: department,
   };
- 
 
   useEffect(() => {
     const handleError = (data) => {
@@ -32,8 +34,6 @@ export default function Add() {
         setLoading('');
       }
     };
-
-    socket.emit("connected");
 
     socket.on("error", handleError);
 
@@ -62,6 +62,7 @@ export default function Add() {
     } else {
       setLoading('loading');
       socket.emit("add", { data });
+      chatId(data.number);
     }
   }
 
@@ -117,7 +118,7 @@ export default function Add() {
                 />
                 </div>
                 <h3>successfully connected</h3>
-                <RedirectTimeout to="/" timeout={5000}/>
+                <RedirectTimeout to="/bot" timeout={5000}/>
               </>
             ) : null}
           </div>

@@ -36,19 +36,24 @@ const headless = process.env.HEADLESS === 'true';
 // Whatsapp-web.js
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
-const createWhatsappSession = async (id, socket) => {
+const createWhatsappSession = (id, socket) => {
     // Chatbot
-    const [botPathText, botPathOptions] = await Promise.all([
-        collectionConnectors.findOne({ number: id }),
-        collectionConnectors.findOne({ number: id })
-    ]);
-    if (botPathText.botText === undefined || botPathOptions.botOptions === undefined) {
-        socket.emit("botsettings");
-        return;
+    let botPathText = '';
+    let botPathOptions = '';
+    let botChat = '';
+    let options = '';
+    async function botPath() {
+        botPathText = await collectionConnectors.findOne({ number: id });
+        botPathOptions = await collectionConnectors.findOne({ number: id });
+        if (botPathText.botText === undefined || botPathOptions.botOptions === undefined) {
+            socket.emit("botsettings");
+            return;
+        };
+        botChat = botPathText.botText;
+        options = eval('(' + botPathOptions.botOptions + ')');
     }
-    const botChat = botPathText.botText;
-    const options = eval('(' + botPathOptions.botOptions + ')');
-    
+    botPath();
+
     // New Client
     const client = new Client({
         puppeteer: {
@@ -95,7 +100,7 @@ const createWhatsappSession = async (id, socket) => {
             req.on('end', () => {
                 try {
                     const data = JSON.parse(requestData);
-                    if(data.token !== id){
+                    if (data.token !== id) {
                         return;
                     };
                     const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
@@ -154,7 +159,7 @@ const createWhatsappSession = async (id, socket) => {
                     } else {
                         res.status(400).send("Bad Request");
                     }
-                    
+
                 } catch (error) {
                     console.error(error);
                     res.status(500).send("Internal Server Error");
@@ -175,7 +180,7 @@ const createWhatsappSession = async (id, socket) => {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
-                    if(visitorData.phone[0].phoneNumber !== id){
+                    if (visitorData.phone[0].phoneNumber !== id) {
                         return;
                     }
                     async function rocketSendMessage() {
@@ -327,11 +332,11 @@ const createWhatsappSession = async (id, socket) => {
                 .catch(error => {
                 });
         }
-        
+
         // Chose the department or bot response
         const chosedOption = options(body);
         let department = ''
-        if(chosedOption !== 'bot_response' && chosedOption !== 'falseOption'){
+        if (chosedOption !== 'bot_response' && chosedOption !== 'falseOption') {
             department = chosedOption;
         } else {
             department = '';
@@ -372,7 +377,7 @@ const createWhatsappSession = async (id, socket) => {
                     .catch(error => {
                         //console.log("error: ",error)
                     });
-                    await message.reply(botChat.welcome_text);
+                await message.reply(botChat.welcome_text);
             } else if (data === 'closedRoom') {
                 if (chosedOption === 'falseOption') {
                     await message.reply(botChat.error);
@@ -548,20 +553,6 @@ const createWhatsappSession = async (id, socket) => {
         socket.emit("active", { message: "dead" });
     });
 
-    socket.on("deleteConnectors", async (data) => {
-        async function deleteConnectors() {
-            const deletedConnector = await collectionConnectors.deleteOne({ _id: new ObjectId(data.id) });
-            if (deletedConnector) {
-                const phoneNumber = data.number;
-                const sessionFolder = path.join(__dirname, ".wwebjs_auth", `session-${phoneNumber}`);
-                if (fs.existsSync(sessionFolder)) {
-                    fs.rmSync(sessionFolder, { recursive: true });
-                    console.log("Session deleted!");
-                }
-            }
-        }
-        deleteConnectors();
-    });
     client.initialize();
 };
 
@@ -574,8 +565,6 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-
-    socket.emit("connected", { message: "approved!" });
 
     socket.on("reloadSessions", () => {
         const loadExistingSessions = async () => {
@@ -622,7 +611,6 @@ io.on("connection", (socket) => {
         socket.emit("active", { message: "dead" });
     }
 
-    /*
     socket.on("deleteConnectors", (data) => {
         async function deleteConnectors() {
             const deletedConnector = await collectionConnectors.deleteOne({ _id: new ObjectId(data.id) });
@@ -632,11 +620,11 @@ io.on("connection", (socket) => {
                 if (fs.existsSync(sessionFolder)) {
                     fs.rmSync(sessionFolder, { recursive: true });
                 }
+                socket.emit("active", { message: "dead" });
             }
         }
         deleteConnectors();
     });
-    */
 
     socket.on("saveSettings", async (recData) => {
         const dataSettings = {
@@ -669,7 +657,7 @@ io.on("connection", (socket) => {
     // Retart pm2 all process function
     async function retartPm2Process() {
         const command = 'pm2 restart all';
-
+        socket.emit("active", { message: "dead" });
         exec(command, (erro, stdout, stderr) => {
             if (erro) {
                 console.error(`Comand error: ${erro.message}`);
@@ -680,27 +668,26 @@ io.on("connection", (socket) => {
                 console.error(`Stderr error: ${stderr}`);
                 return;
             }
-
             console.log(`command log:\n${stdout}`);
         });
     }
 
     // Read and edit bot archives
     socket.on("botAndOptions", async (numberId) => {
-        const botPath = await collectionConnectors.findOne({number: numberId});
-        if(botPath.botText !== null && botPath.botOptions !== null){
+        const botPath = await collectionConnectors.findOne({ number: numberId });
+        if (botPath.botText !== null && botPath.botOptions !== null) {
             socket.emit("textbot", (botPath.botText));
             socket.emit("botoptions", (botPath.botOptions));
         }
-        
+
         socket.on("insertText", async (value) => {
-            await collectionConnectors.updateOne({number: numberId}, {$set: {botText: JSON.parse(value)}});
+            await collectionConnectors.updateOne({ number: numberId }, { $set: { botText: JSON.parse(value) } });
             socket.emit("sucess");
             retartPm2Process();
         });
 
         socket.on("insertOptions", async (value) => {
-            await collectionConnectors.updateOne({number: numberId}, {$set: {botOptions: value}});
+            await collectionConnectors.updateOne({ number: numberId }, { $set: { botOptions: value } });
             socket.emit("sucess");
             retartPm2Process();
         });

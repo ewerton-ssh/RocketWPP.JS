@@ -71,6 +71,42 @@ button {
   background-color: #06c982;
 }
 
+.close{
+  appearance: none;
+  background-color: #aa0404;
+  border: 1px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  line-height: 20px;
+  font-size: 20px;
+  padding: 6px 6px;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  margin-left: auto;
+  margin-right: 40px;
+  margin-bottom: 15px;
+}
+
+.closefocus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+.close:hover {
+  background-color: #c90606;
+}
+
 .addlink {
   text-decoration: none;
 }

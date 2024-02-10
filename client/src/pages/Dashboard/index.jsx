@@ -1,7 +1,7 @@
 import "./dashboard.css";
 import socket from "../../services/socketio";
 import { Link } from "react-router-dom";
-import { IoReloadSharp } from "react-icons/io5";
+import { IoReloadSharp, IoCloseSharp} from "react-icons/io5";
 import Header from "../../components/Header";
 import { useEffect, useState, useContext } from "react";
 import { TbMoodEmptyFilled } from "react-icons/tb";
@@ -24,12 +24,6 @@ export default function Dashboard() {
     }
     socket.emit("listConnectors");
     socket.on("connectors", connectorsCallback);
-    socket.on("botsettings", () => {
-      toast.error("Configure all bot's first!");
-      setTimeout(() => {
-        window.location.reload();
-      }, "4000");
-  })
     return () => {
       socket.off("connectors", connectorsCallback);
     };
@@ -51,6 +45,10 @@ export default function Dashboard() {
     socket.emit("reloadSessions");
   }
 
+  function stop() {
+      socket.emit("closeSession");
+  }
+
   return (
     <>
       <Header />
@@ -59,6 +57,7 @@ export default function Dashboard() {
       </Link>
       <div className="container">
         <h2>Connectors</h2>
+        <button className="close" onClick={stop} ><IoCloseSharp/></button>
         <button className="reload" onClick={reload} disabled={isReady} ><IoReloadSharp/></button>
         <ul className="responsive-table">
           {listConnectors.length === 0 ? (

@@ -26,6 +26,15 @@ export default function ChatBot() {
             setOptions((data));
         });
 
+        /*
+        socket.on("botsettings", () => {
+            toast.error("Configure all bot's first!");
+            setTimeout(() => {
+              window.location.reload();
+            }, "4000");
+        })
+        */
+
         socket.on("sucess", () => {
             toast.success("Saved!");
         });
