@@ -12,10 +12,6 @@ const fs = require('fs');
 const axios = require('axios');
 const { exec } = require('child_process');
 
-// Bot Config
-//const textbot = require('./bot_dialogs/main.json');
-//const options = require('./bot_dialogs/options');
-
 // MongoDB Config
 const uri = process.env.MONGOURL;
 const dbclient = new MongoClient(uri);
@@ -42,19 +38,17 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
 const createWhatsappSession = async (id, socket) => {
     // Chatbot
-    const botPath = await collectionConnectors.findOne({number: id});
-    
-    if(botPath.botText === undefined){
-        socket.emit("botsettings");
-        return;
-    }else if(botPath.botOptions === undefined){
+    const [botPathText, botPathOptions] = await Promise.all([
+        collectionConnectors.findOne({ number: id }),
+        collectionConnectors.findOne({ number: id })
+    ]);
+    if (botPathText.botText === undefined || botPathOptions.botOptions === undefined) {
         socket.emit("botsettings");
         return;
     }
-
-    const botChat = botPath.botText;
-    const options = eval('(' + botPath.botOptions + ')');
-
+    const botChat = botPathText.botText;
+    const options = eval('(' + botPathOptions.botOptions + ')');
+    
     // New Client
     const client = new Client({
         puppeteer: {
@@ -101,6 +95,9 @@ const createWhatsappSession = async (id, socket) => {
             req.on('end', () => {
                 try {
                     const data = JSON.parse(requestData);
+                    if(data.token !== id){
+                        return;
+                    };
                     const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
                     if (match) {
                         const phoneNumber = match[1] + "@c.us";
@@ -136,15 +133,17 @@ const createWhatsappSession = async (id, socket) => {
                                         token: phoneNumber,
                                         name: phoneNumber,
                                         username: phoneNumber,
-                                        phone: phoneNumber,
+                                        phone: id,
                                     }
                                 },
                                     {
                                         headers: headers
                                     })
                                     .then(response => {
+                                        //console.log(response)
                                     })
                                     .catch(error => {
+                                        //console.log(error)
                                     });
                                 // Create room
                                 await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
@@ -155,6 +154,7 @@ const createWhatsappSession = async (id, socket) => {
                     } else {
                         res.status(400).send("Bad Request");
                     }
+                    
                 } catch (error) {
                     console.error(error);
                     res.status(500).send("Internal Server Error");
@@ -175,13 +175,16 @@ const createWhatsappSession = async (id, socket) => {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
+                    if(visitorData.phone[0].phoneNumber !== id){
+                        return;
+                    }
                     async function rocketSendMessage() {
                         if (messageData && messageData.length > 0 && messageData[0].u) {
-                            const data = await collectionSettings.findOne({ _id: 1234567890 });
-                            //const adress = data.ip;
+                            //Delete user on close chat. const data = await collectionSettings.findOne({ _id: 1234567890 });
+                            //Delete user on close chat. const adress = data.ip;
                             if (messageData[0].closingMessage === true) {
                                 try {
-                                    await client.sendMessage(visitorData.phone[0].phoneNumber, botChat.close);
+                                    await client.sendMessage(visitorData.username, botChat.close);
                                 } catch (error) {
                                     return;
                                 }
@@ -191,14 +194,14 @@ const createWhatsappSession = async (id, socket) => {
                                 if (messageData[0].msg === '') {
                                     try {
                                         const media = await MessageMedia.fromUrl(messageData[0].fileUpload.publicFilePath, { unsafeMime: true });
-                                        await client.sendMessage(visitorData.phone[0].phoneNumber, media);
+                                        await client.sendMessage(visitorData.username, media);
                                         return;
                                     } catch (error) {
                                         console.error('Media process error:', error);
                                     }
                                     return;
                                 } else {
-                                    await client.sendMessage(visitorData.phone[0].phoneNumber, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
+                                    await client.sendMessage(visitorData.username, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
                                     return;
                                 };
                             };
@@ -327,7 +330,12 @@ const createWhatsappSession = async (id, socket) => {
         
         // Chose the department or bot response
         const chosedOption = options(body);
-
+        let department = ''
+        if(chosedOption !== 'bot_response' && chosedOption !== 'falseOption'){
+            department = chosedOption;
+        } else {
+            department = '';
+        }
         // Header of visitors
         if (getInfoChat.isGroup) {
             nickSender = `(${getInfoChat.name})`;
@@ -335,8 +343,8 @@ const createWhatsappSession = async (id, socket) => {
                 token: getInfoChat.name,
                 name: nickSender,
                 username: number,
-                phone: number,
-                department: chosedOption
+                phone: id,
+                department: department,
             }
         } else {
             nickSender = message._data.notifyName;
@@ -344,8 +352,8 @@ const createWhatsappSession = async (id, socket) => {
                 token: number,
                 name: nickSender,
                 username: number,
-                phone: number,
-                department: chosedOption
+                phone: id,
+                department: department,
             }
         }
 
@@ -359,14 +367,16 @@ const createWhatsappSession = async (id, socket) => {
                         headers: headers
                     })
                     .then(response => {
+                        //console.log("response:", response)
                     })
                     .catch(error => {
+                        //console.log("error: ",error)
                     });
-                await message.reply(botChat.welcome_text);
+                    await message.reply(botChat.welcome_text);
             } else if (data === 'closedRoom') {
                 if (chosedOption === 'falseOption') {
                     await message.reply(botChat.error);
-                } else if (chosedOption === 'respost_bot') {
+                } else if (chosedOption === 'bot_response') {
                     await message.reply(botChat.bot_response);
                 } else {
                     // Create Room
@@ -612,6 +622,7 @@ io.on("connection", (socket) => {
         socket.emit("active", { message: "dead" });
     }
 
+    /*
     socket.on("deleteConnectors", (data) => {
         async function deleteConnectors() {
             const deletedConnector = await collectionConnectors.deleteOne({ _id: new ObjectId(data.id) });
@@ -625,6 +636,7 @@ io.on("connection", (socket) => {
         }
         deleteConnectors();
     });
+    */
 
     socket.on("saveSettings", async (recData) => {
         const dataSettings = {
@@ -655,7 +667,6 @@ io.on("connection", (socket) => {
     });
 
     // Retart pm2 all process function
-
     async function retartPm2Process() {
         const command = 'pm2 restart all';
 
@@ -675,7 +686,6 @@ io.on("connection", (socket) => {
     }
 
     // Read and edit bot archives
-
     socket.on("botAndOptions", async (numberId) => {
         const botPath = await collectionConnectors.findOne({number: numberId});
         if(botPath.botText !== null && botPath.botOptions !== null){

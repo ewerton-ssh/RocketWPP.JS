@@ -57,7 +57,7 @@ Follow the form below and avoid mistakes.
 function options(option) {
     switch (option) {
         case '1':
-            return 'resposta_bot';
+            return 'bot_response';
         case '2':
             return 'SAC';
         case '3':
