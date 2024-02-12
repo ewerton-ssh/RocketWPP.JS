@@ -145,10 +145,10 @@ const createWhatsappSession = (id, socket) => {
                                         headers: headers
                                     })
                                     .then(response => {
-                                        //console.log(response)
+                                        
                                     })
                                     .catch(error => {
-                                        //console.log(error)
+                                        
                                     });
                                 // Create room
                                 await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
@@ -180,7 +180,7 @@ const createWhatsappSession = (id, socket) => {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
-                    if (visitorData.visitorEmails[0].address !== id + '@wpp') {
+                    if (visitorData.email[0].address !== id + '@wpp') {
                         return;
                     }
                     async function rocketSendMessage() {
@@ -372,10 +372,10 @@ const createWhatsappSession = (id, socket) => {
                         headers: headers
                     })
                     .then(response => {
-                        //console.log("response:", response)
+                        
                     })
                     .catch(error => {
-                        //console.log("error: ",error)
+                        
                     });
                 await message.reply(botChat.welcome_text);
             } else if (data === 'closedRoom') {
