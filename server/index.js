@@ -566,6 +566,8 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
 
+    socket.emit("connected", { message: "approved!" });
+
     socket.on("reloadSessions", () => {
         const loadExistingSessions = async () => {
             const existingSessions = await collectionConnectors.find().toArray();
