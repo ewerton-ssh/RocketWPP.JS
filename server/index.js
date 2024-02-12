@@ -138,7 +138,7 @@ const createWhatsappSession = (id, socket) => {
                                         token: phoneNumber,
                                         name: phoneNumber,
                                         username: phoneNumber,
-                                        phone: id,
+                                        email: id + '@wpp',
                                     }
                                 },
                                     {
@@ -180,7 +180,7 @@ const createWhatsappSession = (id, socket) => {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
-                    if (visitorData.phone[0].phoneNumber !== id) {
+                    if (visitorData.visitorEmails[0].address !== id + '@wpp') {
                         return;
                     }
                     async function rocketSendMessage() {
@@ -348,7 +348,7 @@ const createWhatsappSession = (id, socket) => {
                 token: getInfoChat.name,
                 name: nickSender,
                 username: number,
-                phone: id,
+                email: id + '@wpp',
                 department: department,
             }
         } else {
@@ -357,7 +357,7 @@ const createWhatsappSession = (id, socket) => {
                 token: number,
                 name: nickSender,
                 username: number,
-                phone: id,
+                email: id + '@wpp',
                 department: department,
             }
         }
