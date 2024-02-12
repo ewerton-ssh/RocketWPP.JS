@@ -336,7 +336,7 @@ const createWhatsappSession = (id, socket) => {
         // Chose the department or bot response
         const chosedOption = options(body);
         let department = ''
-        if (chosedOption !== 'bot_response' && chosedOption !== 'falseOption') {
+        if (chosedOption !== 'bot_response' || chosedOption !== 'falseOption') {
             department = chosedOption;
         } else {
             department = '';
