@@ -35,8 +35,6 @@ export default function Add() {
       }
     };
 
-    socket.emit("connected");
-
     socket.on("error", handleError);
 
     socket.on("clientqr", (data) => {
