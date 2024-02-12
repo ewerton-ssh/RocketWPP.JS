@@ -138,7 +138,7 @@ const createWhatsappSession = (id, socket) => {
                                         token: phoneNumber,
                                         name: phoneNumber,
                                         username: phoneNumber,
-                                        email: id + '@wpp',
+                                        phone: id + '@' + phoneNumber,
                                     }
                                 },
                                     {
@@ -180,7 +180,7 @@ const createWhatsappSession = (id, socket) => {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
-                    if (visitorData.email[0].address !== id + '@wpp') {
+                    if (visitorData.phone[0].phoneNumber !== id + '@' + visitorData.username) {
                         return;
                     }
                     async function rocketSendMessage() {
@@ -336,7 +336,7 @@ const createWhatsappSession = (id, socket) => {
         // Chose the department or bot response
         const chosedOption = options(body);
         let department = ''
-        if (chosedOption !== 'bot_response' || chosedOption !== 'falseOption') {
+        if (chosedOption !== 'bot_response' && chosedOption !== 'falseOption') {
             department = chosedOption;
         } else {
             department = '';
@@ -348,7 +348,7 @@ const createWhatsappSession = (id, socket) => {
                 token: getInfoChat.name,
                 name: nickSender,
                 username: number,
-                email: id + '@wpp',
+                phone: id + '@' + number,
                 department: department,
             }
         } else {
@@ -357,7 +357,7 @@ const createWhatsappSession = (id, socket) => {
                 token: number,
                 name: nickSender,
                 username: number,
-                email: id + '@wpp',
+                phone: id + '@' + number,
                 department: department,
             }
         }
@@ -372,7 +372,7 @@ const createWhatsappSession = (id, socket) => {
                         headers: headers
                     })
                     .then(response => {
-                        
+                       
                     })
                     .catch(error => {
                         
