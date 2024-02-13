@@ -29,7 +29,7 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - Rocket.Chat 4.8.7
 - PM2 5.3.1
 
-## For user
+## For use
 ### server/.env
 - Adjuste MONGOURL uri(mongodb login has in URL).
 - Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome).
