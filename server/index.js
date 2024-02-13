@@ -187,6 +187,7 @@ const createWhatsappSession = (id, socket) => {
                 data = chunk;
             });
             req.on('end', () => {
+                const botChat = botPathText.botText;
                 try {
                     const jsonData = JSON.parse(data);
                     const visitorData = jsonData.visitor;
