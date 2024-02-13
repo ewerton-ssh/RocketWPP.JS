@@ -40,8 +40,6 @@ const createWhatsappSession = (id, socket) => {
     // Chatbot
     let botPathText = '';
     let botPathOptions = '';
-    let botChat = '';
-    let options = '';
     async function botPath() {
         botPathText = await collectionConnectors.findOne({ number: id });
         botPathOptions = await collectionConnectors.findOne({ number: id });
@@ -49,8 +47,6 @@ const createWhatsappSession = (id, socket) => {
             socket.emit("botsettings");
             return;
         };
-        botChat = botPathText.botText;
-        options = eval('(' + botPathOptions.botOptions + ')');
     }
     botPath();
 
@@ -127,9 +123,14 @@ const createWhatsappSession = (id, socket) => {
                                         headers: headers
                                     })
                                         .then(response => {
+                                            requestData = '';
+                                            return;
                                         })
                                         .catch(error => {
+                                            requestData = '';
+                                            return;
                                         });
+                                    requestData = '';
                                     return;
                                 };
                                 // Create visitor
@@ -145,24 +146,34 @@ const createWhatsappSession = (id, socket) => {
                                         headers: headers
                                     })
                                     .then(response => {
-                                        
+                                        requestData = '';
+                                        return;
                                     })
                                     .catch(error => {
-                                        
+                                        requestData = '';
+                                        return;
                                     });
                                 // Create room
                                 await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
+                                requestData = '';
+                                return;
                             };
                             sendMessage();
                         };
                         res.status(200).send('Sucess');
+                        requestData = '';
                     } else {
                         res.status(400).send("Bad Request");
+                        requestData = '';
                     }
+                    requestData = '';
+                    return;
 
                 } catch (error) {
                     console.error(error);
                     res.status(500).send("Internal Server Error");
+                    requestData = '';
+                    return;
                 }
             });
         });
@@ -181,6 +192,7 @@ const createWhatsappSession = (id, socket) => {
                     const visitorData = jsonData.visitor;
                     const messageData = jsonData.messages;
                     if (visitorData.phone[0].phoneNumber !== id + '@' + visitorData.username) {
+                        data = null;
                         return;
                     }
                     async function rocketSendMessage() {
@@ -190,23 +202,29 @@ const createWhatsappSession = (id, socket) => {
                             if (messageData[0].closingMessage === true) {
                                 try {
                                     await client.sendMessage(visitorData.username, botChat.close);
+                                    data = null;
                                 } catch (error) {
+                                    data = null;
                                     return;
                                 }
                                 // Delete user on close chat. await axios.delete(`http://${adress}/api/v1/livechat/visitor/${visitorData.token}`);
+                                data = null;
                                 return;
                             } else {
                                 if (messageData[0].msg === '') {
                                     try {
                                         const media = await MessageMedia.fromUrl(messageData[0].fileUpload.publicFilePath, { unsafeMime: true });
                                         await client.sendMessage(visitorData.username, media);
+                                        data = null;
                                         return;
                                     } catch (error) {
                                         console.error('Media process error:', error);
+                                        data = null;
                                     }
                                     return;
                                 } else {
                                     await client.sendMessage(visitorData.username, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
+                                    data = null;
                                     return;
                                 };
                             };
@@ -214,8 +232,12 @@ const createWhatsappSession = (id, socket) => {
                     };
                     rocketSendMessage();
                     res.status(200).send();
+                    data = '';
+                    return;
                 } catch (error) {
                     res.status(500).send("Internal Server Error");
+                    return;
+                    data = '';
                 }
             });
         });
@@ -237,11 +259,11 @@ const createWhatsappSession = (id, socket) => {
         const getInfoChat = await message.getChat();
         const body = message.body;
         const number = message.from;
-        let nickSender = '';
-        let visitorHeader = {};
-        let mediaHeader = {};
-        let messageData = {};
-        let matchingRoom = {};
+        let nickSender = null;
+        let visitorHeader = null;
+        let mediaHeader = null;
+        let messageData = null;
+        let matchingRoom = null;
 
         async function rocketMessage(roomId) {
             // Has media, send media
@@ -274,6 +296,7 @@ const createWhatsappSession = (id, socket) => {
                         });
                     } catch (error) {
                     }
+                    return;
                 } else if (message.type === 'ptt' || message.type === 'audio') {
                     const arquivo = fs.readFileSync(filePath);
                     const blob = new Blob([arquivo], { type: 'audio/mp3' });
@@ -285,6 +308,7 @@ const createWhatsappSession = (id, socket) => {
                         });
                     } catch (error) {
                     }
+                    return;
                 } else if (message.type === 'video') {
                     const arquivo = fs.readFileSync(filePath);
                     const blob = new Blob([arquivo], { type: 'video/mp4' });
@@ -296,6 +320,7 @@ const createWhatsappSession = (id, socket) => {
                         });
                     } catch (error) {
                     }
+                    return;
                 } else if (message.type === 'document') {
                     const arquivo = fs.readFileSync(filePath);
                     const blob = new Blob([arquivo], { type: 'document/archive' });
@@ -307,6 +332,7 @@ const createWhatsappSession = (id, socket) => {
                         });
                     } catch (error) {
                     }
+                    return;
                 }
             };
 
@@ -331,15 +357,18 @@ const createWhatsappSession = (id, socket) => {
                 })
                 .catch(error => {
                 });
+            return
         }
 
         // Chose the department or bot response
+        const botChat = botPathText.botText;
+        const options = eval('(' + botPathOptions.botOptions + ')');
         const chosedOption = options(body);
-        let department = ''
+        let department = null;
         if (chosedOption !== 'bot_response' && chosedOption !== 'falseOption') {
             department = chosedOption;
         } else {
-            department = '';
+            department = null;
         }
         // Header of visitors
         if (getInfoChat.isGroup) {
@@ -351,6 +380,11 @@ const createWhatsappSession = (id, socket) => {
                 phone: id + '@' + number,
                 department: department,
             }
+            nickSender = null;
+            mediaHeader = null;
+            messageData = null;
+            matchingRoom = null;
+            department = null;
         } else {
             nickSender = message._data.notifyName;
             visitorHeader = {
@@ -360,6 +394,11 @@ const createWhatsappSession = (id, socket) => {
                 phone: id + '@' + number,
                 department: department,
             }
+            nickSender = null;
+            mediaHeader = null;
+            messageData = null;
+            matchingRoom = null;
+            department = null;
         }
 
         // Create new vistor and manager bot & messages
@@ -372,10 +411,10 @@ const createWhatsappSession = (id, socket) => {
                         headers: headers
                     })
                     .then(response => {
-                       
+                        visitorHeader = null;
                     })
                     .catch(error => {
-                        
+                        visitorHeader = null;
                     });
                 await message.reply(botChat.welcome_text);
             } else if (data === 'closedRoom') {
@@ -391,6 +430,7 @@ const createWhatsappSession = (id, socket) => {
                                 .then(response => {
                                     async function messageResponse() {
                                         await message.reply(botChat.success);
+                                        return;
                                     };
                                     messageResponse();
                                 })
@@ -398,6 +438,7 @@ const createWhatsappSession = (id, socket) => {
                                     async function errorResponse() {
                                         if (!error.response.data.success) {
                                             await message.reply(botChat.no_service);
+                                            return;
                                         };
                                     };
                                     errorResponse();
@@ -407,6 +448,7 @@ const createWhatsappSession = (id, socket) => {
                                 .then(response => {
                                     async function messageResponse() {
                                         await message.reply(botChat.success);
+                                        return;
                                     };
                                     messageResponse();
                                 })
@@ -414,6 +456,7 @@ const createWhatsappSession = (id, socket) => {
                                     async function errorResponse() {
                                         if (!error.response.data.success) {
                                             await message.reply(botChat.no_service);
+                                            return;
                                         };
                                     };
                                     errorResponse();
@@ -430,13 +473,16 @@ const createWhatsappSession = (id, socket) => {
                         .then(response => {
                             // Create Room
                             createRoom();
+                            visitorHeader = null;
                         })
                         .catch(error => {
+                            visitorHeader = null;
                         });
                 }
 
             } else if (data === 'openedRoom') {
                 rocketMessage(roomId);
+                return;
             };
         };
 
@@ -470,6 +516,7 @@ const createWhatsappSession = (id, socket) => {
                 })
                 .catch(error => {
                 });
+            return;
         }
 
         // Decide the message is the new or old visitor
@@ -477,20 +524,24 @@ const createWhatsappSession = (id, socket) => {
             await axios.get(`http://${adress}/api/v1/livechat/visitor/${getInfoChat.name}`)
                 .then(response => {
                     openRooms();
+                    return;
                 })
                 .catch(error => {
                     if (error.response.status === 400) {
                         createVisitor('newVisitor');
+                        return;
                     };
                 });
         } else {
             await axios.get(`http://${adress}/api/v1/livechat/visitor/${number}`)
                 .then(response => {
                     openRooms();
+                    return;
                 })
                 .catch(error => {
                     if (error.response.status === 400) {
                         createVisitor('newVisitor');
+                        return;
                     };
                 });
         }
@@ -510,6 +561,7 @@ const createWhatsappSession = (id, socket) => {
                 const imagePath = path.join(folderPath, filename);
                 fs.writeFileSync(imagePath, media.data, 'base64');
                 await sendRocketMessage(message, `whatsapp-images/${filename}`);
+                return;
             } else if (message.type === 'ptt' || message.type === 'audio') {
                 const media = await message.downloadMedia();
                 const filename = `${message.from}_${Date.now()}.mp3`;
@@ -520,6 +572,7 @@ const createWhatsappSession = (id, socket) => {
                 const audioPath = path.join(folderPath, filename);
                 fs.writeFileSync(audioPath, media.data, 'base64');
                 await sendRocketMessage(message, `whatsapp-audios/${filename}`);
+                return;
             } else if (message.type === 'video') {
                 const media = await message.downloadMedia();
                 const filename = `${message.from}_${Date.now()}.mp4`;
@@ -530,6 +583,7 @@ const createWhatsappSession = (id, socket) => {
                 const audioPath = path.join(folderPath, filename);
                 fs.writeFileSync(audioPath, media.data, 'base64');
                 await sendRocketMessage(message, `whatsapp-videos/${filename}`);
+                return;
             } else if (message.type === 'document') {
                 const media = await message.downloadMedia();
                 const filename = `${message.from}_${Date.now()}_${message.body}`;
@@ -540,20 +594,27 @@ const createWhatsappSession = (id, socket) => {
                 const audioPath = path.join(folderPath, filename);
                 fs.writeFileSync(audioPath, media.data, 'base64');
                 await sendRocketMessage(message, `whatsapp-documents/${filename}`);
+                return;
             }
         } else {
             // Text Message
             await sendRocketMessage(message);
+            return;
         }
+        return;
     });
 
     // Close and delete sessions
     socket.on("closeSession", async () => {
         await client.destroy();
         socket.emit("active", { message: "dead" });
+        return;
     });
 
     client.initialize();
+    botPathText = null;
+    botPathOptions = null;
+    return;
 };
 
 // Socket io connection
