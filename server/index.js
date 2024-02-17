@@ -36,7 +36,10 @@ const headless = process.env.HEADLESS === 'true';
 // Whatsapp-web.js
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
+const sessions = {};
+
 const createWhatsappSession = (id, socket) => {
+
     // Chatbot
     let botPathText = '';
     let botPathOptions = '';
@@ -83,68 +86,43 @@ const createWhatsappSession = (id, socket) => {
             message: "clientisready"
         });
         active = true;
+        sessions[id] = client;
+    });
 
-        // Start Chat
-        app.post('/start-chat', (req, res) => {
-
-            let requestData = '';
-
-            req.on('data', (chunk) => {
-                requestData += chunk;
-            });
-
-            req.on('end', () => {
-                try {
-                    const data = JSON.parse(requestData);
-                    if (data.token !== id) {
-                        return;
-                    };
-                    const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
-                    if (match) {
-                        const phoneNumber = match[1] + "@c.us";
-                        if (match[2]) {
-                            const messageText = match[2];
-                            async function sendMessage() {
-                                const configData = await collectionSettings.findOne({ _id: 1234567890 });
-                                const adress = configData.ip;
-                                const headers = {
-                                    'Content-Type': 'application/json',
-                                    'X-Auth-Token': configData.token,
-                                    'X-User-Id': configData.id,
-                                };
-                                // Send Whatsapp Message
-                                try {
-                                    await client.sendMessage(phoneNumber, `${messageText}`);
-                                } catch (error) {
-                                    await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
-                                        channel: "general",
-                                        text: `🤖\n_${botChat.start_chat_error}_ ${phoneNumber}!`
-                                    }, {
-                                        headers: headers
-                                    })
-                                        .then(response => {
-                                            requestData = '';
-                                            return;
-                                        })
-                                        .catch(error => {
-                                            requestData = '';
-                                            return;
-                                        });
-                                    requestData = '';
-                                    return;
-                                };
-                                // Create visitor
-                                await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
-                                    visitor: {
-                                        token: phoneNumber,
-                                        name: phoneNumber,
-                                        username: phoneNumber,
-                                        phone: id + '@' + phoneNumber,
-                                    }
-                                },
-                                    {
-                                        headers: headers
-                                    })
+    // Start Chat
+    app.post('/start-chat', (req, res) => {
+        let requestData = '';
+        req.on('data', (chunk) => {
+            requestData += chunk;
+        });
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(requestData);
+                const sessionId = data.token;
+                const client = sessions[sessionId];
+                const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
+                if (match) {
+                    const phoneNumber = match[1] + "@c.us";
+                    if (match[2]) {
+                        const messageText = match[2];
+                        async function sendMessage() {
+                            const configData = await collectionSettings.findOne({ _id: 1234567890 });
+                            const adress = configData.ip;
+                            const headers = {
+                                'Content-Type': 'application/json',
+                                'X-Auth-Token': configData.token,
+                                'X-User-Id': configData.id,
+                            };
+                            // Send Whatsapp Message
+                            try {
+                                await client.sendMessage(phoneNumber, `${messageText}`);
+                            } catch (error) {
+                                await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
+                                    channel: "general",
+                                    text: `🤖\n_${botChat.start_chat_error}_ ${phoneNumber}!`
+                                }, {
+                                    headers: headers
+                                })
                                     .then(response => {
                                         requestData = '';
                                         return;
@@ -153,94 +131,112 @@ const createWhatsappSession = (id, socket) => {
                                         requestData = '';
                                         return;
                                     });
-                                // Create room
-                                await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
                                 requestData = '';
                                 return;
                             };
-                            sendMessage();
-                        };
-                        res.status(200).send('Sucess');
-                        requestData = '';
-                    } else {
-                        res.status(400).send("Bad Request");
-                        requestData = '';
-                    }
-                    requestData = '';
-                    return;
-
-                } catch (error) {
-                    console.error(error);
-                    res.status(500).send("Internal Server Error");
-                    requestData = '';
-                    return;
-                }
-            });
-        });
-
-        // Webhook
-        app.post('/rocketjs-webhook', (req, res) => {
-
-            let data = '';
-
-            req.on('data', (chunk) => {
-                data = chunk;
-            });
-            req.on('end', () => {
-                const botChat = botPathText.botText;
-                try {
-                    const jsonData = JSON.parse(data);
-                    const visitorData = jsonData.visitor;
-                    const messageData = jsonData.messages;
-                    if (visitorData.phone[0].phoneNumber !== id + '@' + visitorData.username) {
-                        data = null;
-                        return;
-                    }
-                    async function rocketSendMessage() {
-                        if (messageData && messageData.length > 0 && messageData[0].u) {
-                            //Delete user on close chat. const data = await collectionSettings.findOne({ _id: 1234567890 });
-                            //Delete user on close chat. const adress = data.ip;
-                            if (messageData[0].closingMessage === true) {
-                                try {
-                                    await client.sendMessage(visitorData.username, botChat.close);
-                                    data = null;
-                                } catch (error) {
-                                    data = null;
-                                    return;
+                            // Create visitor
+                            await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
+                                visitor: {
+                                    token: phoneNumber,
+                                    name: phoneNumber,
+                                    username: phoneNumber,
+                                    phone: sessionId + '@' + phoneNumber,
                                 }
-                                // Delete user on close chat. await axios.delete(`http://${adress}/api/v1/livechat/visitor/${visitorData.token}`);
+                            },
+                                {
+                                    headers: headers
+                                })
+                                .then(response => {
+                                    requestData = '';
+                                    return;
+                                })
+                                .catch(error => {
+                                    requestData = '';
+                                    return;
+                                });
+                            // Create room
+                            await axios.get(`http://${adress}/api/v1/livechat/room?token=${phoneNumber}`);
+                            requestData = '';
+                            return;
+                        };
+                        sendMessage();
+                    };
+                    res.status(200).send('Sucess');
+                    requestData = '';
+                } else {
+                    res.status(400).send("Bad Request");
+                    requestData = '';
+                }
+                requestData = '';
+                return;
+
+            } catch (error) {
+                console.error(error);
+                res.status(500).send("Internal Server Error");
+                requestData = '';
+                return;
+            }
+        });
+    });
+
+    // Webhook
+    app.post('/rocketjs-webhook', (req, res) => {
+        let data = '';
+        req.on('data', (chunk) => {
+            data = chunk;
+        });
+        req.on('end', () => {
+            const botChat = botPathText.botText;
+            try {
+                const jsonData = JSON.parse(data);
+                const visitorData = jsonData.visitor;
+                const messageData = jsonData.messages;
+                const [sessionId, visitor] = visitorData.phone[0].phoneNumber.split('@');
+                const client = sessions[sessionId];
+                async function rocketSendMessage() {
+                    if (messageData && messageData.length > 0 && messageData[0].u) {
+                        //Delete user on close chat. const data = await collectionSettings.findOne({ _id: 1234567890 });
+                        //Delete user on close chat. const adress = data.ip;
+                        if (messageData[0].closingMessage === true) {
+                            try {
+                                await client.sendMessage(visitorData.username, botChat.close);
+                                data = null;
+                            } catch (error) {
                                 data = null;
                                 return;
-                            } else {
-                                if (messageData[0].msg === '') {
-                                    try {
-                                        const media = await MessageMedia.fromUrl(messageData[0].fileUpload.publicFilePath, { unsafeMime: true });
-                                        await client.sendMessage(visitorData.username, media);
-                                        data = null;
-                                        return;
-                                    } catch (error) {
-                                        console.error('Media process error:', error);
-                                        data = null;
-                                    }
-                                    return;
-                                } else {
-                                    await client.sendMessage(visitorData.username, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
+                            }
+                            // Delete user on close chat. await axios.delete(`http://${adress}/api/v1/livechat/visitor/${visitorData.token}`);
+                            data = null;
+                            return;
+                        } else {
+                            if (messageData[0].msg === '') {
+                                try {
+                                    const media = await MessageMedia.fromUrl(messageData[0].fileUpload.publicFilePath, { unsafeMime: true });
+                                    await client.sendMessage(visitorData.username, media);
                                     data = null;
                                     return;
-                                };
+                                } catch (error) {
+                                    console.error('Media process error:', error);
+                                    data = null;
+                                }
+                                return;
+                            } else {
+                                await client.sendMessage(visitorData.username, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
+                                data = null;
+                                return;
                             };
                         };
                     };
-                    rocketSendMessage();
-                    res.status(200).send();
-                    data = '';
-                    return;
-                } catch (error) {
-                    res.status(500).send("Internal Server Error");
-                    return;
-                    data = '';
-                }
-            });
+                };
+                rocketSendMessage();
+                res.status(200).send();
+                data = '';
+                return;
+            } catch (error) {
+                res.status(500).send("Internal Server Error");
+                data = '';
+                return;
+            }
         });
     });
 
@@ -615,7 +611,7 @@ const createWhatsappSession = (id, socket) => {
     client.initialize();
     botPathText = null;
     botPathOptions = null;
-    return;
+    return client;
 };
 
 // Socket io connection
