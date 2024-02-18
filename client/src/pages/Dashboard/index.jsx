@@ -30,7 +30,7 @@ export default function Dashboard() {
   }, []);
 
   function deleteConnector(id, number) {
-    socket.emit("closeSession");
+    socket.emit("closeSession", {id, number});
     setLoading(true);
     setTimeout(() => {
       socket.emit("deleteConnectors", { id, number });
