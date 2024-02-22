@@ -34,7 +34,6 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - Adjuste MONGOURL uri(mongodb login has in URL).
 - Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome).
 - Adjuste HEADLESS true or false(pupeeteer control open or close web browser, set "false" if you use proxy).
-- Adjuste DBNAME for diferent names case use multiple instances.
 
 ## Chatbot syntax save
 Follow the form below and avoid mistakes.
