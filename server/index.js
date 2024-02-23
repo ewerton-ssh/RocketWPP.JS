@@ -637,6 +637,8 @@ io.on("connection", (socket) => {
                 createWhatsappSession(number, socket);
             };
             socket.emit("active", { message: "loading" });
+            closeRooms();
+            setInterval(closeRooms, 60000);
             return;
         };
         loadExistingSessions();
@@ -646,9 +648,9 @@ io.on("connection", (socket) => {
         const dataConnector = {
             number: recData.data.number,
             department: recData.data.department
-        }
+        };
         async function addConnector() {
-            const existingConnector = await collectionConnectors.findOne({ number: recData.data.number })
+            const existingConnector = await collectionConnectors.findOne({ number: recData.data.number });
             if (existingConnector) {
                 socket.emit("error", { message: "thisRegistered" });
                 return;
@@ -698,7 +700,8 @@ io.on("connection", (socket) => {
             _id: recData.data._id,
             id: recData.data.id,
             token: recData.data.token,
-            ip: recData.data.ip
+            ip: recData.data.ip,
+            minutes: recData.data.minutes
         };
         const existingSetting = await collectionSettings.findOne({ _id: dataSettings._id });
         if (existingSetting === null) {
@@ -710,7 +713,8 @@ io.on("connection", (socket) => {
                 $set: {
                     id: dataSettings.id,
                     token: dataSettings.token,
-                    ip: dataSettings.ip
+                    ip: dataSettings.ip,
+                    minutes: dataSettings.minutes
                 }
             };
             await collectionSettings.updateOne(filter, update);
@@ -764,4 +768,41 @@ io.on("connection", (socket) => {
             retartPm2Process();
         });
     });
+
+    // Close automatically rooms
+    async function closeRooms() {
+        const data = await collectionSettings.findOne({ _id: 1234567890 });
+        const adress = data.ip;
+        const headers = {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': data.token,
+            'X-User-Id': data.id,
+        };
+        await axios.get(`http://${adress}/api/v1/livechat/rooms?open`, {
+            headers: headers
+        })
+            .then(response => {
+                async function verifyLastMessage(room) {
+                    const lastMessage = new Date(room.lm);
+                    const currentTime = new Date();
+                    const diffMs = currentTime - lastMessage;
+                    const diffMinutes = diffMs / (1000 * 60);
+                    if (diffMinutes > data.minutes) {
+                        await axios.post(`http://${adress}/api/v1/livechat/room.close`, {
+                            'rid': room._id,
+                            'token': room.v.token
+                        })
+                            .then(response => {
+                            })
+                            .catch(error => {
+                                console.log("erro:", error)
+                            })
+                    }
+                };
+                response.data.rooms.forEach(verifyLastMessage);
+            })
+            .catch(error => {
+                console.log('error:', error)
+            });
+    };
 });

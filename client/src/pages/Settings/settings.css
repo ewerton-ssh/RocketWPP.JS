@@ -2,3 +2,12 @@ p{
     margin-top: 20px;
     font-size: 12px;
 }
+
+label {
+    margin-top: 2px;
+}
+
+form {
+    backdrop-filter: 0px;
+    
+}
