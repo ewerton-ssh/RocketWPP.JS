@@ -45,10 +45,16 @@ export default function ChatBot() {
 
     async function saveDialogs(){
         socket.emit("insertText", main);
+        setTimeout(() => {
+              window.location.reload();
+            }, "4000");
     }
 
     async function saveOptions(){
         socket.emit("insertOptions", options);
+        setTimeout(() => {
+              window.location.reload();
+            }, "4000");
     }
 
     return (
