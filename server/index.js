@@ -57,6 +57,13 @@ const createWhatsappSession = (id, socket) => {
 
     // New Client
     const client = new Client({
+        authStrategy: new LocalAuth({
+            clientId: id,
+        }),
+        webVersionCache: {
+            type: 'remote',
+            remotePath:'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.0.html',
+        },
         puppeteer: {
             executablePath: process.env.CHROME_EXECUTABLE_PATH,
             args: [
@@ -67,10 +74,7 @@ const createWhatsappSession = (id, socket) => {
             ],
             headless: headless,
             timeout: 30000,
-        },
-        authStrategy: new LocalAuth({
-            clientId: id,
-        }),
+        }
     });
 
     client.on('disconnected', () => {
