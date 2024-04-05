@@ -67,6 +67,16 @@ function options(option) {
 }
 ```
 
+### Outgoing Webhook Integrations RocketChat (Start Whatsapp new chat):
+
+- Channel: Set created channel.
+- Triggers word: enviawpp
+- URL: http://localhost:3001/start-chat
+- Token: 61998562633/SAC (Connector_resgistered_number/Department)
+
+After setup webhook integration, send the 'enviawpp number, text' command, example:
+  _enviawpp 551199999999, hello_
+
 ## _RocketWPP.JS Server_
 
 ### Run the comand in SERVER directory:
