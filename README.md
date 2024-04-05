@@ -74,7 +74,7 @@ function options(option) {
 - URL: http://localhost:3001/start-chat
 - Token: 61998562633/SAC (Connector_resgistered_number/Department)
 
-After setup webhook integration, send the 'enviawpp number, text' command, example:
+After setup webhook integration, send the 'enviawpp number, text' command in setted channel, example:  
   _enviawpp 551199999999, hello_
 
 ## _RocketWPP.JS Server_
