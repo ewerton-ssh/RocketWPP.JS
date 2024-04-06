@@ -2,7 +2,6 @@ import Header from "../../components/Header";
 import { useEffect, useState, useContext } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import socket from "../../services/socketio";
-import {toast} from "react-toastify";
 import "./chatbot.css";
 import { BotContext } from "../../contexts/chatbot";
 
@@ -25,36 +24,17 @@ export default function ChatBot() {
         socket.on("botoptions", (data) => {
             setOptions((data));
         });
-
-        /*
-        socket.on("botsettings", () => {
-            toast.error("Configure all bot's first!");
-            setTimeout(() => {
-              window.location.reload();
-            }, "4000");
-        })
-        */
-
-        socket.on("sucess", () => {
-            toast.success("Saved!");
-        });
-        return () => {
-            socket.off("sucess");
-        };
+        return () => {};
     }, [botId]);
 
     async function saveDialogs(){
         socket.emit("insertText", main);
-        setTimeout(() => {
-              window.location.reload();
-            }, "4000");
+        window.location.reload();
     }
 
     async function saveOptions(){
         socket.emit("insertOptions", options);
-        setTimeout(() => {
-              window.location.reload();
-            }, "4000");
+        window.location.reload();
     }
 
     return (

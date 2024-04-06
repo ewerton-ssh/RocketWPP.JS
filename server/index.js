@@ -33,11 +33,9 @@ const headless = process.env.HEADLESS === 'true';
 // Whatsapp-web.js
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
-// Control active status
-let active = false;
-
 // Sessions array
 const sessions = {};
+const activedSessions = {};
 
 // Create whatsapp Session
 const createWhatsappSession = (id, socket) => {
@@ -88,11 +86,14 @@ const createWhatsappSession = (id, socket) => {
     });
 
     client.on('ready', () => {
+        sessions[id] = client;
+        activedSessions[id] = 'actived'
         socket.emit('clientisready', {
             message: "clientisready"
         });
-        active = true;
-        sessions[id] = client;
+        socket.emit('active', {
+            activedSessions
+        });
     });
 
     // Start Chat
@@ -102,9 +103,12 @@ const createWhatsappSession = (id, socket) => {
             requestData += chunk;
         });
         req.on('end', () => {
+            const botChat = botPathText.botText;
             try {
                 const data = JSON.parse(requestData);
-                const sessionId = data.token;
+                const splitIDandDepartment = data.token.split('/');
+                const sessionId = splitIDandDepartment[0]
+                const department = splitIDandDepartment[1]
                 const client = sessions[sessionId];
                 const match = data.text.match(/enviawpp\s*(\d+)(?:,\s*(.+))?/);
                 if (match) {
@@ -123,9 +127,10 @@ const createWhatsappSession = (id, socket) => {
                             try {
                                 await client.sendMessage(phoneNumber, `${messageText}`);
                             } catch (error) {
+                                console.log(error)
                                 await axios.post(`http://${adress}/api/v1/chat.postMessage`, {
                                     channel: "general",
-                                    text: `🤖\n_${botChat.start_chat_error}_ ${phoneNumber}!`
+                                    text: `🤖\n_${botChat.start_chat_error}_ ${match[1]}!`
                                 }, {
                                     headers: headers
                                 })
@@ -141,25 +146,23 @@ const createWhatsappSession = (id, socket) => {
                                 return;
                             };
                             // Create visitor
-                            let visitor = '';
                             await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
                                 visitor: {
                                     token: phoneNumber,
                                     name: phoneNumber,
                                     username: phoneNumber,
                                     phone: sessionId + '@' + phoneNumber,
+                                    department: department
                                 }
                             },
                                 {
                                     headers: headers
                                 })
                                 .then(response => {
-                                    visitor = '';
                                     requestData = '';
                                     return;
                                 })
                                 .catch(error => {
-                                    visitor = '';
                                     requestData = '';
                                     return;
                                 });
@@ -470,6 +473,7 @@ const createWhatsappSession = (id, socket) => {
                                 });
                         }
                     }
+
                     // Create Room
                     await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
                         visitor: visitorHeader
@@ -609,14 +613,6 @@ const createWhatsappSession = (id, socket) => {
         return;
     });
 
-    // Close and delete sessions
-    socket.on("closeSession", async (data) => {
-        const sessionId = data.number;
-        const client = sessions[sessionId];
-        await client.destroy();
-        socket.emit("active", { message: "dead" });
-    });
-
     client.initialize();
     botPathText = null;
     botPathOptions = null;
@@ -631,21 +627,42 @@ const io = new Server(server, {
     },
 });
 
+// WebSocket connections
 io.on("connection", (socket) => {
 
-    socket.on("reloadSessions", () => {
-        const loadExistingSessions = async () => {
-            const existingSessions = await collectionConnectors.find().toArray();
-            for (const session of existingSessions) {
-                const number = session.number;
-                createWhatsappSession(number, socket);
-            };
-            socket.emit("active", { message: "loading" });
+    // Inicial actived sessions
+    socket.emit("active", {
+        activedSessions
+    });
+
+    // List connectos
+    socket.on("listConnectors", () => {
+        async function listConnectors() {
+            const dataConnectors = await collectionConnectors.find().toArray();
+            socket.emit("connectors", { 
+                dataConnectors 
+            });
+            socket.emit("active", {
+                activedSessions
+            });
+            return;
+        };
+        listConnectors();
+    });
+
+    // Reload Whatsapp sessions
+    socket.on("reloadSessions", (data) => {
+        function loadExistingSessions(){
+            createWhatsappSession(data.sessionId, socket)
             closeRooms();
             setInterval(closeRooms, 60000);
             return;
-        };
+        }
         loadExistingSessions();
+        activedSessions[data.sessionId] = 'loading'
+        socket.emit("active", {
+            activedSessions
+        });
     });
 
     socket.on("add", (recData) => {
@@ -667,22 +684,24 @@ io.on("connection", (socket) => {
         addConnector();
     });
 
-    socket.on("listConnectors", () => {
-        async function listConnectors() {
-            const dataConnectors = await collectionConnectors.find().toArray();
-            socket.emit("connectors", { dataConnectors });
-            if (active) {
-                socket.emit("active", { message: "actived" });
-            };
-            return;
-        };
-        listConnectors();
+    // Close and delete sessions
+    socket.on("closeSession", async (data) => {
+        const sessionId = data.number;
+        const client = sessions[sessionId];
+        activedSessions[data.number] = 'loading'
+        socket.emit("active", {
+            activedSessions
+        });
+        await client.destroy();
+        setTimeout(() => {
+            activedSessions[data.number] = ''
+            socket.emit("active", {
+                activedSessions
+            });
+        }, 10000);
     });
 
-    if (!active) {
-        socket.emit("active", { message: "dead" });
-    }
-
+    // Delete connector data for database
     socket.on("deleteConnectors", (data) => {
         async function deleteConnectors() {
             const deletedConnector = await collectionConnectors.deleteOne({ _id: new ObjectId(data.id) });
@@ -692,7 +711,6 @@ io.on("connection", (socket) => {
                 if (fs.existsSync(sessionFolder)) {
                     fs.rmSync(sessionFolder, { recursive: true });
                 }
-                socket.emit("active", { message: "dead" });
             };
             return;
         };
@@ -734,7 +752,6 @@ io.on("connection", (socket) => {
     // Retart pm2 all process function
     async function retartPm2Process() {
         const command = 'pm2 restart all';
-        socket.emit("active", { message: "dead" });
         exec(command, (erro, stdout, stderr) => {
             if (erro) {
                 console.error(`Comand error: ${erro.message}`);
@@ -760,15 +777,11 @@ io.on("connection", (socket) => {
 
         socket.on("insertText", async (value) => {
             await collectionConnectors.updateOne({ number: numberId }, { $set: { botText: JSON.parse(value) } });
-            socket.emit("sucess");
-            dbclient.close();
             retartPm2Process();
         });
 
         socket.on("insertOptions", async (value) => {
             await collectionConnectors.updateOne({ number: numberId }, { $set: { botOptions: value } });
-            socket.emit("sucess");
-            dbclient.close();
             retartPm2Process();
         });
     });

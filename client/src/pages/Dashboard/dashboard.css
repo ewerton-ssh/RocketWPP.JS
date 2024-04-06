@@ -47,10 +47,10 @@ button {
   cursor: pointer;
   display: flex;
   align-items: center;
-  line-height: 20px;
-  font-size: 20px;
-  padding: 6px 6px;
-  position: relative;
+  font-size: 16px;
+  padding: 1px 1px;
+  height: 20px;
+  width: 20px;
   text-align: center;
   text-decoration: none;
   user-select: none;
@@ -58,8 +58,6 @@ button {
   touch-action: manipulation;
   vertical-align: middle;
   white-space: nowrap;
-  margin-left: auto;
-  margin-bottom: 15px;
 }
 
 .reload:focus:not(:focus-visible):not(.focus-visible) {
@@ -71,7 +69,7 @@ button {
   background-color: #06c982;
 }
 
-.close{
+.pause {
   appearance: none;
   background-color: #aa0404;
   border: 1px solid rgba(27, 31, 35, .15);
@@ -82,10 +80,10 @@ button {
   cursor: pointer;
   display: flex;
   align-items: center;
-  line-height: 20px;
-  font-size: 20px;
-  padding: 6px 6px;
-  position: absolute;
+  font-size: 16px;
+  padding: 1px 1px;
+  height: 20px;
+  width: 20px;
   text-align: center;
   text-decoration: none;
   user-select: none;
@@ -93,17 +91,14 @@ button {
   touch-action: manipulation;
   vertical-align: middle;
   white-space: nowrap;
-  margin-left: auto;
-  margin-right: 40px;
-  margin-bottom: 15px;
 }
 
-.closefocus:not(:focus-visible):not(.focus-visible) {
+.pause:focus:not(:focus-visible):not(.focus-visible) {
   box-shadow: none;
   outline: none;
 }
 
-.close:hover {
+.pause:hover {
   background-color: #c90606;
 }
 
