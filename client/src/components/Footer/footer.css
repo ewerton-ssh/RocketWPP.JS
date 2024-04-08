@@ -1,0 +1,20 @@
+.footer-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.version {
+    color: azure;
+    font-size: 13px;
+    margin: 0;
+}
+
+.version a {
+    text-decoration: none;
+    color: #007bff;
+}

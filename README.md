@@ -72,7 +72,7 @@ function options(option) {
 - Channel: Set created channel.
 - Triggers word: enviawpp
 - URL: http://localhost:3001/start-chat
-- Token: 61998562633/SAC (Connector_resgistered_number/Department)
+- Token: 551199999999/SAC (Connector_resgistered_number/Department)
 
 After setup webhook integration, send the 'enviawpp number, text' command in setted channel, example:  
   _enviawpp 551199999999, hello_

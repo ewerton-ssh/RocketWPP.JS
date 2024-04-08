@@ -21,20 +21,21 @@ export default function ChatBot() {
                 setMain(JSON.stringify(data, null, 2));
             }
         });
+        socket.on("reload", () => {
+            window.location.reload();
+        })
         socket.on("botoptions", (data) => {
             setOptions((data));
         });
         return () => {};
     }, [botId]);
 
-    async function saveDialogs(){
+    function saveDialogs(){
         socket.emit("insertText", main);
-        window.location.reload();
     }
 
-    async function saveOptions(){
+    function saveOptions(){
         socket.emit("insertOptions", options);
-        window.location.reload();
     }
 
     return (

@@ -2,6 +2,7 @@ import './signin.css'
 import { toast } from 'react-toastify';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/auth';
+import Footer from '../../components/Footer'
 
 function SignIn() {
   const { signIn, loadingAuth } = useContext(AuthContext);
@@ -19,14 +20,12 @@ function SignIn() {
   }
 
   return (
-    
-      <>
-      
+    <>
       <div className="background">
         <div className="shape"></div>
         <div className="shape"></div>
-    </div>
-    <form>
+      </div>
+      <form>
         <h3>RocketWPP.JS</h3>
 
         <label>Username</label>
@@ -35,11 +34,10 @@ function SignIn() {
         <label>Password</label>
         <input type="password" placeholder="Password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-        <button className='loginButton' onClick={handleSubmit}type='submit'> {loadingAuth ? 'Loading...' : 'Log in'} </button>
-    </form>
-    
+        <button className='loginButton' onClick={handleSubmit} type='submit'> {loadingAuth ? 'Loading...' : 'Log in'} </button>
+      </form>
+      <Footer/>
     </>
-    
   )
 }
 
