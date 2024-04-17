@@ -81,7 +81,7 @@ After setup webhook integration, send the 'enviawpp number, text' command in set
 
 ### Run the comand in SERVER directory:
 
-$ npm run install
+$ npm install
 
 ### After installation, run the comand in SERVER directory:
 
