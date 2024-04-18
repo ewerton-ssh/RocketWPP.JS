@@ -6,7 +6,6 @@ const io = require('../server/websocket.js');
 const { database } = require('../mongoServer/mongo.js');
 const { createWhatsappSession } = require('../createWhatsappSession/main.js');
 const fs = require('fs');
-const botId = require('../globalVariables/botId.js');
 
 // MongoDB Config
 const collectionConnectors = database.collection('connectors');
@@ -15,6 +14,9 @@ const collectionSettings = database.collection('settings');
 // Import global variables
 const activedSessions = require('../globalVariables/activedSessions.js');
 const sessions = require('../globalVariables/sessions.js');
+
+// Bot Id
+let botId = '';
 
 // WebSocket connections
 io.on("connection", (socket) => {
@@ -144,7 +146,7 @@ io.on("connection", (socket) => {
     // Read and edit bot archives
     socket.on("botAndOptions", async (id) => {
         botId = id
-        if (botId = null) {
+        if (botId === null) {
             return;
         }
         const botPath = await collectionConnectors.findOne({ number: id });
@@ -158,20 +160,52 @@ io.on("connection", (socket) => {
     socket.once("insertText", async (value) => {
         const success = await collectionConnectors.updateOne({ number: botId }, { $set: { botText: JSON.parse(value) } });
         if (success) {
+
             socket.emit("reload");
-            restartPm2Process();
+            const client = sessions[botId];
+            activedSessions[botId] = 'loading';
+
+            socket.emit("active", {
+                activedSessions
+            });
+            
+            await client.destroy();
+
+            setTimeout(() => {
+                activedSessions[botId] = ''
+                socket.emit("active", {
+                    activedSessions
+                });
+            }, 10000);
+
             return;
-        }
+        };
     });
 
     // Save bot options
     socket.once("insertOptions", async (value) => {
         const success = await collectionConnectors.updateOne({ number: botId }, { $set: { botOptions: value } });
         if (success) {
+
             socket.emit("reload");
-            restartPm2Process();
+            const client = sessions[botId];
+            activedSessions[botId] = 'loading';
+
+            socket.emit("active", {
+                activedSessions
+            });
+            
+            await client.destroy();
+
+            setTimeout(() => {
+                activedSessions[botId] = ''
+                socket.emit("active", {
+                    activedSessions
+                });
+            }, 10000);
+
             return;
-        }
+        };
     });
 
 });
