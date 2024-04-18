@@ -1,10 +1,12 @@
 const { ObjectId } = require('mongodb');
+const path = require('path');
 const { restartPm2Process } = require('../restartPm2Process/main.js');
 const { closeRooms } = require('../closeRooms/main.js');
 const io = require('../server/websocket.js');
 const { database } = require('../mongoServer/mongo.js');
 const { createWhatsappSession } = require('../createWhatsappSession/main.js');
 const fs = require('fs');
+const botId = require('../globalVariables/botId.js');
 
 // MongoDB Config
 const collectionConnectors = database.collection('connectors');
@@ -152,6 +154,7 @@ io.on("connection", (socket) => {
         }
     });
 
+    // Save bot dialogs
     socket.once("insertText", async (value) => {
         const success = await collectionConnectors.updateOne({ number: botId }, { $set: { botText: JSON.parse(value) } });
         if (success) {
@@ -161,6 +164,7 @@ io.on("connection", (socket) => {
         }
     });
 
+    // Save bot options
     socket.once("insertOptions", async (value) => {
         const success = await collectionConnectors.updateOne({ number: botId }, { $set: { botOptions: value } });
         if (success) {
