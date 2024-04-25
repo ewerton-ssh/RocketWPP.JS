@@ -138,7 +138,7 @@ async function sendRocketMessage(message, hasMedia, id) {
         department = chosedOption;
     } else {
         department = null;
-    };  
+    };
 
     // Header of visitors
     if (getInfoChat.isGroup) {
@@ -170,22 +170,6 @@ async function sendRocketMessage(message, hasMedia, id) {
         matchingRoom = null;
         department = null;
     };
-
-    // Create Room
-    await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
-        visitor: visitorHeader
-    },
-        {
-            headers: headers
-        })
-        .then(response => {
-            // Create Room
-            createRoom();
-            visitorHeader = null;
-        })
-        .catch(error => {
-            visitorHeader = null;
-        });
 
     // Create new vistor and manager bot & messages
     async function createVisitor(data, roomId) {
@@ -267,6 +251,19 @@ async function sendRocketMessage(message, hasMedia, id) {
                     });
             };
         } else if (data === 'openedRoom') {
+            // Rename started contact chat
+            await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
+                visitor: visitorHeader
+            },
+                {
+                    headers: headers
+                })
+                .then(response => {
+                    visitorHeader = null;
+                })
+                .catch(error => {
+                    visitorHeader = null;
+                });
             rocketMessage(roomId);
             return;
         };
