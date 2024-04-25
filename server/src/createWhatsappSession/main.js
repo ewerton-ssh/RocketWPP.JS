@@ -79,7 +79,8 @@ const createWhatsappSession = (id, socket) => {
         // Media message
         if (message.from === 'status@broadcast'){
             return;
-        } else if (message.hasMedia) {
+        } 
+        if (message.hasMedia) {
             if (message.type === 'image' || message.type === 'sticker') {
                 const media = await message.downloadMedia();
                 const filename = `${message.from}_${Date.now()}.jpg`;
@@ -124,7 +125,7 @@ const createWhatsappSession = (id, socket) => {
                 fs.writeFileSync(docPath, media.data, 'base64');
                 await sendRocketMessage(message, `./whatsapp-media/whatsapp-documents/${filename}`, id);
                 return;
-            }
+            };
         } else {
             // Text Message
             await sendRocketMessage(message, '', id);
