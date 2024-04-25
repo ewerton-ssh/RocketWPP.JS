@@ -77,7 +77,9 @@ const createWhatsappSession = (id, socket) => {
     // Message
     client.on('message', async (message) => {
         // Media message
-        if (message.hasMedia) {
+        if (message.from === 'status@broadcast'){
+            return;
+        } else if (message.hasMedia) {
             if (message.type === 'image' || message.type === 'sticker') {
                 const media = await message.downloadMedia();
                 const filename = `${message.from}_${Date.now()}.jpg`;
