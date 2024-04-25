@@ -46,11 +46,11 @@ async function sendRocketMessage(message, hasMedia, id) {
             mediaHeader = {
                 'x-visitor-token': number
             };
-        }
+        };
 
         if (hasMedia !== undefined) {
             sendMediaMessage();
-        }
+        };
 
         async function sendMediaMessage() {
             if (message.type === 'image' || message.type === 'sticker') {
@@ -138,7 +138,7 @@ async function sendRocketMessage(message, hasMedia, id) {
         department = chosedOption;
     } else {
         department = null;
-    }  
+    };  
 
     // Header of visitors
     if (getInfoChat.isGroup) {
@@ -169,7 +169,23 @@ async function sendRocketMessage(message, hasMedia, id) {
         messageData = null;
         matchingRoom = null;
         department = null;
-    }
+    };
+
+    // Create Room
+    await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
+        visitor: visitorHeader
+    },
+        {
+            headers: headers
+        })
+        .then(response => {
+            // Create Room
+            createRoom();
+            visitorHeader = null;
+        })
+        .catch(error => {
+            visitorHeader = null;
+        });
 
     // Create new vistor and manager bot & messages
     async function createVisitor(data, roomId) {
