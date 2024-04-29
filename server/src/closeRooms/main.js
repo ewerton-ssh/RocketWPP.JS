@@ -17,6 +17,9 @@ async function closeRooms() {
     })
         .then(response => {
             async function verifyLastMessage(room) {
+                if(room.v.username.includes('-')){
+                    return;
+                };
                 const lastMessage = new Date(room.lm);
                 const currentTime = new Date();
                 const diffMs = currentTime - lastMessage;
