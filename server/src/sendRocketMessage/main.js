@@ -218,6 +218,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                             .then(response => {
                                 async function messageResponse() {
                                     await message.reply(botChat.success);
+                                    rocketMessage(response.data.room._id);
                                     return;
                                 };
                                 messageResponse();
