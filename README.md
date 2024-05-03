@@ -1,4 +1,4 @@
-# RocketWPP.JS
+# RocketWPP.JS v1.5.1
 
 ![RocketWPP.JS](https://i.imgur.com/M7iSCgd.png)
 ![Rocket.Chat](https://img.shields.io/badge/Rocket.Chat-4.8.7-ed4359.svg)
