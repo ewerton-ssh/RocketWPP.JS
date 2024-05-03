@@ -150,11 +150,6 @@ async function sendRocketMessage(message, hasMedia, id) {
             phone: id + '@' + number,
             department: department,
         }
-        nickSender = null;
-        mediaHeader = null;
-        messageData = null;
-        matchingRoom = null;
-        department = null;
     } else {
         nickSender = message._data.notifyName;
         visitorHeader = {
@@ -164,11 +159,6 @@ async function sendRocketMessage(message, hasMedia, id) {
             phone: id + '@' + number,
             department: department,
         }
-        nickSender = null;
-        mediaHeader = null;
-        messageData = null;
-        matchingRoom = null;
-        department = null;
     };
 
     // Create new vistor and manager bot & messages
@@ -252,18 +242,34 @@ async function sendRocketMessage(message, hasMedia, id) {
                     });
             };
         } else if (data === 'openedRoom') {
+            //Rename Visitor Headers
+            if (getInfoChat.isGroup) {
+                nickSender = `(${getInfoChat.name})`;
+                renameHeader = {
+                    token: getInfoChat.name,
+                    name: nickSender,
+                    username: number,
+                    phone: id + '@' + number
+                }
+            } else {
+                nickSender = message._data.notifyName;
+                renameHeader = {
+                    token: number,
+                    name: nickSender,
+                    username: number,
+                    phone: id + '@' + number,
+                }
+            };
             // Rename started contact chat
             await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
-                visitor: visitorHeader
+                visitor: renameHeader
             },
                 {
                     headers: headers
                 })
                 .then(response => {
-                    visitorHeader = null;
                 })
                 .catch(error => {
-                    visitorHeader = null;
                 });
             rocketMessage(roomId);
             return;
