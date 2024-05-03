@@ -40,7 +40,7 @@ async function sendRocketMessage(message, hasMedia, id) {
 
         if (getInfoChat.isGroup) {
             mediaHeader = {
-                'x-visitor-token': getInfoChat.name
+                'x-visitor-token': getInfoChat.name + '_group'
             };
         } else {
             mediaHeader = {
@@ -106,7 +106,7 @@ async function sendRocketMessage(message, hasMedia, id) {
 
         if (getInfoChat.isGroup) {
             messageData = {
-                token: getInfoChat.name,
+                token: getInfoChat.name + '_group',
                 rid: roomId,
                 msg: `*${message._data.notifyName}*\n${message.body}`
             }
@@ -144,7 +144,7 @@ async function sendRocketMessage(message, hasMedia, id) {
     if (getInfoChat.isGroup) {
         nickSender = `(${getInfoChat.name})`;
         visitorHeader = {
-            token: getInfoChat.name,
+            token: getInfoChat.name + '_group',
             name: nickSender,
             username: number,
             phone: id + '@' + number,
@@ -186,7 +186,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                 // Create Room
                 async function createRoom() {
                     if (getInfoChat.isGroup) {
-                        await axios.get(`http://${adress}/api/v1/livechat/room?token=${getInfoChat.name}`)
+                        await axios.get(`http://${adress}/api/v1/livechat/room?token=${getInfoChat.name + '_group'}`)
                             .then(response => {
                                 async function messageResponse() {
                                     await message.reply(botChat.success);
@@ -246,7 +246,7 @@ async function sendRocketMessage(message, hasMedia, id) {
             if (getInfoChat.isGroup) {
                 nickSender = `(${getInfoChat.name})`;
                 renameHeader = {
-                    token: getInfoChat.name,
+                    token: getInfoChat.name + '_group',
                     name: nickSender,
                     username: number,
                     phone: id + '@' + number
@@ -289,7 +289,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                 });
 
                 if (getInfoChat.isGroup) {
-                    matchingRoom = idToTokenMap.find(obj => obj.token === getInfoChat.name);
+                    matchingRoom = idToTokenMap.find(obj => obj.token === getInfoChat.name + '_group');
                 } else {
                     matchingRoom = idToTokenMap.find(obj => obj.token === number);
                 }
@@ -310,7 +310,7 @@ async function sendRocketMessage(message, hasMedia, id) {
 
     // Decide the message is the new or old visitor
     if (getInfoChat.isGroup) {
-        await axios.get(`http://${adress}/api/v1/livechat/visitor/${getInfoChat.name}`)
+        await axios.get(`http://${adress}/api/v1/livechat/visitor/${getInfoChat.name + '_group'}`)
             .then(response => {
                 openRooms();
                 return;

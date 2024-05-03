@@ -1,4 +1,4 @@
-const {database} = require('../mongoServer/mongo.js');
+const { database } = require('../mongoServer/mongo.js');
 const axios = require('axios');
 
 // MongoDB Config
@@ -17,24 +17,25 @@ async function closeRooms() {
     })
         .then(response => {
             async function verifyLastMessage(room) {
-                if(room.v.username.includes('-')){
+                if (room.v.token.includes('_group')) {
                     return;
+                } else {
+                    const lastMessage = new Date(room.lm);
+                    const currentTime = new Date();
+                    const diffMs = currentTime - lastMessage;
+                    const diffMinutes = diffMs / (1000 * 60);
+                    if (diffMinutes > data.minutes) {
+                        await axios.post(`http://${adress}/api/v1/livechat/room.close`, {
+                            'rid': room._id,
+                            'token': room.v.token
+                        })
+                            .then(response => {
+                            })
+                            .catch(error => {
+                                console.log("erro:", error)
+                            })
+                    };
                 };
-                const lastMessage = new Date(room.lm);
-                const currentTime = new Date();
-                const diffMs = currentTime - lastMessage;
-                const diffMinutes = diffMs / (1000 * 60);
-                if (diffMinutes > data.minutes) {
-                    await axios.post(`http://${adress}/api/v1/livechat/room.close`, {
-                        'rid': room._id,
-                        'token': room.v.token
-                    })
-                        .then(response => {
-                        })
-                        .catch(error => {
-                            console.log("erro:", error)
-                        })
-                }
             };
             response.data.rooms.forEach(verifyLastMessage);
         })
