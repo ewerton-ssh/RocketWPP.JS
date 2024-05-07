@@ -191,13 +191,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                                 return;
                             })
                             .catch(error => {
-                                async function errorResponse() {
-                                    if (!error.response.data.success) {
-                                        await message.reply(botChat.no_service);
-                                        return;
-                                    };
-                                };
-                                errorResponse();
+                                return;
                             });
                     } else {
                         await axios.get(`http://${adress}/api/v1/livechat/room?token=${number}`)
