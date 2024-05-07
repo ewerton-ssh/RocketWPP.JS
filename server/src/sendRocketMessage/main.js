@@ -188,11 +188,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                     if (getInfoChat.isGroup) {
                         await axios.get(`http://${adress}/api/v1/livechat/room?token=${getInfoChat.name + '_group'}`)
                             .then(response => {
-                                async function messageResponse() {
-                                    await message.reply(botChat.success);
-                                    return;
-                                };
-                                messageResponse();
+                                return;
                             })
                             .catch(error => {
                                 async function errorResponse() {
