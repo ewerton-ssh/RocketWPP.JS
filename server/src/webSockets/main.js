@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const path = require('path');
-const { restartPm2Process } = require('../restartPm2Process/main.js');
 const { closeRooms } = require('../closeRooms/main.js');
 const io = require('../server/websocket.js');
 const { database } = require('../mongoServer/mongo.js');
