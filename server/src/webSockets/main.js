@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
         socket.emit("active", {
             activedSessions
         });
-        if (client !== undefined || client !== null){
+        if (client !== undefined){
             client.destroy();
         }
         setTimeout(() => {
@@ -176,7 +176,7 @@ io.on("connection", (socket) => {
                 socket.emit("active", {
                     activedSessions
                 });
-                if (client !== undefined || client !== null){
+                if (client !== undefined){
                     client.destroy();
                 }
                 setTimeout(() => {
@@ -202,7 +202,7 @@ io.on("connection", (socket) => {
                 socket.emit("active", {
                     activedSessions
                 });
-                if (client !== undefined || client !== null){
+                if (client !== undefined){
                     client.destroy();
                 }
                 setTimeout(() => {

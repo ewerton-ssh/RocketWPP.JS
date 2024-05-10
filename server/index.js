@@ -1,4 +1,5 @@
 const app = require('./src/services/app.js');
+const express = require('express');
 const server = require('./src/services/httpService.js');
 const path = require('path');
 const fs = require('fs');
@@ -12,11 +13,6 @@ const port = process.env.PORT;
 // WebSocket connect
 const io = require('./src/webSockets/main.js');
 io.on('', () => {});
-
-// Http server
-app.get('/', (req, res) => {
-    res.send("<h1 style='background-color:green;' >Active!!!</h1>");
-});
 
 // Http webCache wwebjs server
 app.get('/webcache', (req, res) => {
@@ -35,6 +31,31 @@ app.get('/webcache', (req, res) => {
         res.writeHead(404);
         res.end('Page not found, error 404');
     }
+});
+
+// Http site server
+app.use(express.static(path.join(__dirname, './dist')));
+
+app.get('/', (req, res) => {
+    if (req.url === '/') {
+        // Read whatsapp html cache doc
+        fs.readFile(path.join(__dirname, './dist', 'index.html'), (err, data) => {
+            if (err) {
+                res.writeHead(500);
+                res.end('Internal server error');
+            } else {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(data);
+            }
+        });
+    } else {
+        res.writeHead(404);
+        res.end('Page not found, error 404');
+    }
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './dist', 'index.html'));
 });
 
 // Console message
