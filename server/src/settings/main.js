@@ -1,4 +1,4 @@
-const { dbSettings } = require('../neDbServer/neDb.js');
+const { dbSettings } = require('../db/neDb.js');
 
 // Chatbot
 async function settingsPath() {

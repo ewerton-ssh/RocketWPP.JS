@@ -5,7 +5,7 @@ const { createWhatsappSession } = require('../createWhatsappSession/main.js');
 const fs = require('fs');
 
 //NeDB Imports
-const { dbSettings, dbConnectors } = require('../neDbServer/neDb.js')
+const { dbSettings, dbConnectors } = require('../db/neDb.js')
 
 // Import global variables
 const activedSessions = require('../globalVariables/activedSessions.js');
@@ -130,7 +130,7 @@ io.on("connection", (socket) => {
             ip: recData.data.ip,
             minutes: recData.data.minutes
         };
-        dbSettings.update({ _id: dataSettings._id }, dataSettings, { upsert: true }, (err) => {
+        dbSettings.update({ _id: 1234567890 }, dataSettings, { upsert: true }, (err) => {
             return;
         });
     });
