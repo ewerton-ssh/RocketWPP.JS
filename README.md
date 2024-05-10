@@ -21,6 +21,14 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 | Open/Close Session                   | ✔   |
 | Join Group by invicted               | ✔   |
 
+## Windows and Linux easy installation
+- [Install Node min version 20.10.0](https://nodejs.org/en/download)
+- Windows: execute the setup-windows.bat
+- Linux: execute the setup-linux.sh
+- Open your browser and access [http://localhost:3001](http://localhost:3001)
+- Pattern login: admin
+- Pattern password: rocket123@
+
 ## Requires version installed on your server
 - NPM 10.2.3
 - Node 20.10.0
