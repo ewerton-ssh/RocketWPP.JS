@@ -1,23 +1,22 @@
-const { database } = require('../mongoServer/mongo.js');
-const { botPath } = require('../chatBot/main.js');
 const axios = require('axios');
+const { settingsPath } = require('../settings/main.js');
+const { botPath } = require('../chatBot/main.js');
 const fs = require('fs');
 
-// MongoDB collections
-const collectionSettings = database.collection('settings');
-
-// Rocket send message
 async function sendRocketMessage(message, hasMedia, id) {
 
+    //Bot config
     const { botPathText } = await botPath(id);
-    const { botPathOptions } = await botPath(id)
+    const { botPathOptions } = await botPath(id);
 
-    const data = await collectionSettings.findOne({ _id: 1234567890 });
-    const adress = data.ip;
+    //Settings config
+    const { settings } = await settingsPath();
+
+    const adress = settings.ip;
     const headers = {
         'Content-Type': 'application/json',
-        'X-Auth-Token': data.token,
-        'X-User-Id': data.id,
+        'X-Auth-Token': settings.token,
+        'X-User-Id': settings.id,
     };
     const header = {
         'Content-Type': 'application/json'
@@ -63,6 +62,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                         headers: mediaHeader
                     });
                 } catch (error) {
+                    return;
                 };
                 return;
             } else if (message.type === 'ptt' || message.type === 'audio') {
@@ -75,6 +75,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                         headers: mediaHeader
                     });
                 } catch (error) {
+                    return;
                 }
                 return;
             } else if (message.type === 'video') {
@@ -87,18 +88,20 @@ async function sendRocketMessage(message, hasMedia, id) {
                         headers: mediaHeader
                     });
                 } catch (error) {
+                    return;
                 }
                 return;
             } else if (message.type === 'document') {
                 const arquivo = fs.readFileSync(filePath);
                 const blob = new Blob([arquivo], { type: 'document/archive' });
                 mediaData.append('file', blob, `${message.from}_${Date.now()}_${message.body}`);
-                //mediaData.append('description', 'document');
+                //mediaData.append('description', 'document file');
                 try {
                     await axios.post(`http://${adress}/api/v1/livechat/upload/${roomId}`, mediaData, {
                         headers: mediaHeader
                     });
                 } catch (error) {
+                    return;
                 }
                 return;
             }
@@ -130,8 +133,8 @@ async function sendRocketMessage(message, hasMedia, id) {
     };
 
     // Chose the department or bot response
-    const botChat = botPathText.botText;
-    const options = eval('(' + botPathOptions.botOptions + ')');
+    const botChat = botPathText;
+    const options = eval('(' + botPathOptions + ')');
     const chosedOption = options(body);
     let department = null;
     if (chosedOption !== 'bot_response' && chosedOption !== 'falseOption') {
@@ -250,6 +253,7 @@ async function sendRocketMessage(message, hasMedia, id) {
                     phone: id + '@' + number,
                 }
             };
+            
             // Rename started contact chat
             await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
                 visitor: renameHeader
@@ -260,13 +264,14 @@ async function sendRocketMessage(message, hasMedia, id) {
                 .then(response => {
                 })
                 .catch(error => {
+                    return;
                 });
             rocketMessage(roomId);
             return;
         };
     };
 
-    //Open room
+    // Open room
     async function openRooms() {
         await axios.get(`http://${adress}/api/v1/livechat/rooms?open`, {
             headers: headers

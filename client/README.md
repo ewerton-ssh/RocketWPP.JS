@@ -8,4 +8,4 @@ $ npm run build
 
 # After create DIST paste, run the comand in root DIST directory: 
 
-$ pm2 serve --spa --port 5173
+$ pm2 serve --spa --port 3002

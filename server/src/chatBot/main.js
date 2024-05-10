@@ -1,16 +1,22 @@
-const { database } = require('../mongoServer/mongo.js');
-
-// MongoDB collections
-const collectionConnectors = database.collection('connectors');
+const { dbConnectors } = require('../neDbServer/neDb.js');
 
 // Chatbot
 async function botPath(id) {
-    const botPathText = await collectionConnectors.findOne({ number: id });
-    const botPathOptions = await collectionConnectors.findOne({ number: id });
-    if (botPathText.botText === undefined || botPathOptions.botOptions === undefined) {
-        return;
-    };
-    return { botPathText, botPathOptions };
-};
+    return new Promise((resolve, reject) => {
+        dbConnectors.findOne({ number: id }, function(err, doc) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(doc);
+            }
+        });
+    })
+    .then(doc => {
+        return { botPathText: doc.botText, botPathOptions: doc.botOptions };
+    })
+    .catch(err => {
+        console.error('dbConnectors(chatBot):', err);
+    });   
+}
 
 module.exports = { botPath };

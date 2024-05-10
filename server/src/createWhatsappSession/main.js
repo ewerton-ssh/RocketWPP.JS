@@ -6,7 +6,6 @@ const fs = require('fs');
 // .env config
 require('dotenv').config({ path: path.join(__dirname, 'config', '.env') });
 
-
 // Import global variables
 const sessions = require ('../globalVariables/sessions.js')
 const activedSessions = require('../globalVariables/activedSessions.js');
@@ -24,16 +23,16 @@ const createWhatsappSession = (id, socket) => {
     }
 
     // Start new chat
-    const { startChat }= require('../startChat/main.js')
+    const { startChat }= require('../startChat/main.js');
     startChat();
     
     // Start new chat
-    const { startChatGroup }= require('../startChatGroup/main.js')
+    const { startChatGroup }= require('../startChatGroup/main.js');
     startChatGroup(); 
 
     // Start Webhook
-    const { webhook } = require('../webhook/main.js')
-    webhook(); 
+    const { webhook } = require('../webhook/main.js');
+    webhook(id); 
 
     // New Client
     const client = new Client({
@@ -42,7 +41,7 @@ const createWhatsappSession = (id, socket) => {
         }),
         webVersionCache: {
             type: 'remote',
-            remotePath:'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.0.html',
+            remotePath:'http://localhost:3001/webcache'
         },
         puppeteer: {
             executablePath: process.env.CHROME_EXECUTABLE_PATH,
@@ -130,7 +129,7 @@ const createWhatsappSession = (id, socket) => {
                 return;
             };
         } else {
-            // Text Message
+            // Text message
             await sendRocketMessage(message, '', id);
             return;
         }

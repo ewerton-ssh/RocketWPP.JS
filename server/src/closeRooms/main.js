@@ -1,16 +1,16 @@
-const { database } = require('../mongoServer/mongo.js');
+const { settingsPath } = require('../settings/main.js');
 const axios = require('axios');
 
-// MongoDB Config
-const collectionSettings = database.collection('settings');
-
 async function closeRooms() {
-    const data = await collectionSettings.findOne({ _id: 1234567890 });
-    const adress = data.ip;
+
+    //Settings config
+    const { settings } = await settingsPath();
+
+    const adress = settings.ip;
     const headers = {
         'Content-Type': 'application/json',
-        'X-Auth-Token': data.token,
-        'X-User-Id': data.id,
+        'X-Auth-Token': settings.token,
+        'X-User-Id': settings.id,
     };
     await axios.get(`http://${adress}/api/v1/livechat/rooms?open`, {
         headers: headers
@@ -24,15 +24,16 @@ async function closeRooms() {
                     const currentTime = new Date();
                     const diffMs = currentTime - lastMessage;
                     const diffMinutes = diffMs / (1000 * 60);
-                    if (diffMinutes > data.minutes) {
+                    if (diffMinutes > settings.minutes) {
                         await axios.post(`http://${adress}/api/v1/livechat/room.close`, {
                             'rid': room._id,
                             'token': room.v.token
                         })
                             .then(response => {
+                                console.log('Room closed:', room.v);
                             })
                             .catch(error => {
-                                console.log("erro:", error)
+                                console.log('error:', error);
                             })
                     };
                 };
@@ -40,7 +41,7 @@ async function closeRooms() {
             response.data.rooms.forEach(verifyLastMessage);
         })
         .catch(error => {
-            console.log('error:', error)
+            console.error('Connect error: RocketChat not listening.');
         });
 };
 
