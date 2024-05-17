@@ -29,6 +29,10 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 - Pattern login: admin
 - Pattern password: rocket123@
 
+## Docker compose up
+Paste in terminal:
+$ docker-compose -f "docker-compose.yml" up -d --build
+
 ## Requires version installed on your server
 - NPM 10.2.3
 - Node 20.10.0
