@@ -1,0 +1,13 @@
+version: "3"
+services:
+  node:
+    build: .
+    command: "pm2-runtime start server.config.js"
+    working_dir: /home/node/RocketWPP.JS/server
+    expose:
+      - "3001"
+    ports:
+      - "3001:3001"
+
+
+
