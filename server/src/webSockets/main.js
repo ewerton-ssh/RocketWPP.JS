@@ -128,7 +128,8 @@ io.on("connection", (socket) => {
             id: recData.data.id,
             token: recData.data.token,
             ip: recData.data.ip,
-            minutes: recData.data.minutes
+            minutes: recData.data.minutes,
+            typebotip: recData.data.hostTypebot
         };
         dbSettings.update({ _id: 1234567890 }, dataSettings, { upsert: true }, (err) => {
             return;
@@ -147,7 +148,7 @@ io.on("connection", (socket) => {
     });
 
     // Read and edit bot archives
-    socket.on("botAndOptions", async (id) => {
+    socket.on("botDialogs", async (id) => {
         botId = id;
         if (botId === null) {
             return;
@@ -156,9 +157,8 @@ io.on("connection", (socket) => {
             if (err) {
                 return;
             }
-            if (botPath && botPath.botText !== null && botPath.botOptions !== null) {
+            if (botPath && botPath.botText !== null) {
                 socket.emit("textbot", botPath.botText);
-                socket.emit("botoptions", botPath.botOptions);
             }
         });
     });
@@ -166,32 +166,6 @@ io.on("connection", (socket) => {
     // Save bot dialogs
     socket.once("insertText", async (value) => {
         dbConnectors.update({ number: botId }, { $set: { botText: JSON.parse(value) } }, {}, (err, numAffected) => {
-            if (err) {
-                return;
-            }
-            if (numAffected > 0) {
-                socket.emit("reload");
-                const client = sessions[botId];
-                activedSessions[botId] = 'loading';
-                socket.emit("active", {
-                    activedSessions
-                });
-                if (client !== undefined){
-                    client.destroy();
-                }
-                setTimeout(() => {
-                    activedSessions[botId] = '';
-                    socket.emit("active", {
-                        activedSessions
-                    });
-                }, 10000);
-            }
-        });
-    });
-
-    // Save bot options
-    socket.once("insertOptions", async (value) => {
-        dbConnectors.update({ number: botId }, { $set: { botOptions: value } }, {}, (err, numAffected) => {
             if (err) {
                 return;
             }

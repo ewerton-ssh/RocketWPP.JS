@@ -10,12 +10,14 @@ export default function Settings() {
     const [token, setToken] = useState('');
     const [ip, setIp] = useState('');
     const [minutes, setMinutes] = useState(5);
+    const [hostTypeBot, setHostTypeBot] = useState('');
     const data = {
         _id: 1234567890,
         id: id,
         token: token,
         ip: ip,
-        minutes: minutes
+        minutes: minutes,
+        hostTypebot: hostTypeBot
     }
 
     useEffect(() => {
@@ -25,6 +27,7 @@ export default function Settings() {
             setToken(data.token);
             setIp(data.ip);
             setMinutes(data.minutes);
+            setHostTypeBot(data.typebotip);
         });
 
         return () => {
@@ -55,6 +58,8 @@ export default function Settings() {
                         <input type="text"  placeholder='IP/Port' value={ip} onChange={(e) => setIp(e.target.value)}/>
                         <label>Minutes for close chat</label>
                         <input type="number"  placeholder='minutes' value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value))}/>
+                        <label>TypeBot IP/Port</label>
+                        <input type="text"  placeholder='TypeBot IP/Port' value={hostTypeBot} onChange={(e) => setHostTypeBot(e.target.value)}/>
                         <p>Webhook: http://adress:port/rocketjs-webhook</p>
                         <p>New chat URL: http://adress:port/start-chat</p>
                         <p>For integration, trigger is &quot;enviawpp&quot;, use the format &quot;enviawpp number, msg&quot; for start new whatsapp chat.</p>

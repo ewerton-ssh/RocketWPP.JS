@@ -1,11 +1,12 @@
 const app = require('../services/app.js');
 const { botPath } = require('../chatBot/main.js');
 const { MessageMedia } = require('whatsapp-web.js');
+const typebotSessions = require('../typeBot/sessions/main.js');
 
 // Import global variables
 const sessions = require('../globalVariables/sessions.js');
 
-async function webhook(id) {
+async function webhook() {
 
     // Webhook
     app.post('/rocketjs-webhook', (req, res) => {
@@ -27,6 +28,7 @@ async function webhook(id) {
                         if (messageData[0].closingMessage === true) {
                             try {
                                 await client.sendMessage(visitorData.username, botChat.close);
+                                delete typebotSessions[visitorData.username];
                                 return;
                             } catch (error) {
                                 return;

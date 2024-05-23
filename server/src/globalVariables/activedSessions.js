@@ -1,4 +1,4 @@
 // Sessions array
 const activedSessions = {};
 
-module.exports = { activedSessions };
+module.exports = activedSessions;

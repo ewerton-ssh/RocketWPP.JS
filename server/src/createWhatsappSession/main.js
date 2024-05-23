@@ -32,7 +32,7 @@ const createWhatsappSession = (id, socket) => {
 
     // Start Webhook
     const { webhook } = require('../webhook/main.js');
-    webhook(id); 
+    webhook(); 
 
     // New Client
     const client = new Client({

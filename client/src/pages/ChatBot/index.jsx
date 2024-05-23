@@ -10,10 +10,9 @@ export default function ChatBot() {
     const { botId } = useContext(BotContext);
 
     const [main, setMain] = useState('');
-    const [options, setOptions] = useState('');
 
     useEffect(() => {
-        socket.emit("botAndOptions", botId);
+        socket.emit("botDialogs", botId);
         socket.on("textbot", (data) => {
             if(data === null){
                 setMain(data);
@@ -24,9 +23,6 @@ export default function ChatBot() {
         socket.on("reload", () => {
             window.location.reload();
         })
-        socket.on("botoptions", (data) => {
-            setOptions((data));
-        });
         return () => {};
     }, [botId]);
 
@@ -34,15 +30,11 @@ export default function ChatBot() {
         socket.emit("insertText", main);
     }
 
-    function saveOptions(){
-        socket.emit("insertOptions", options);
-    }
-
     return (
         <>
             <Header />
             <div className="title">
-                <h2>Text Bot ({botId})</h2>
+                <h2>Rocket Text Bot ({botId})</h2>
                 <div className="container">
                     <label className="botlabel">Case Dialogs (JSON)</label>
                     <CodeEditor
@@ -61,25 +53,19 @@ export default function ChatBot() {
                         }}
                     />
                     <button className="save" onClick={saveDialogs}>Save</button>
-                    <label className="botlabel">Case Options (JavaScript)</label>
-                    <CodeEditor
-                        value={options}
-                        language="js"
-                        placeholder="Please enter js code."
-                        onChange={(e) => setOptions(e.target.value)}
-                        padding={15}
-                        data-color-mode="dark"
-                        className="teste"
-                        style={{
-                            backgroundColor: '#282a37',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                        }}
-                    />
-                    <button className="save" onClick={saveOptions}>Save</button>
                     <label className="botlabel">For configure the bot, please README in<a className="botlabel" target="blank" href="https://github.com/ewerton-ssh/RocketWPP.JS/tree/main">here</a></label>
                     <label className="botlabel">PS: After save, please, restart connectors in main page.</label>
+                    <img 
+                        style={{
+                            maxWidth: '15vh',
+                            marginRight: '10px',
+                            marginLeft: '5px',
+                            marginTop: '50px'
+                        }} 
+                        src="https://github.com/baptisteArno/typebot.io/raw/main/.github/images/logo-dark.png">
+                    </img>
+                    <label className="botlabel">TypeBot bot link must be the same as connector number, exemple:</label>
+                    <label className="botlabel">http://localhost:3006/{botId}</label>
                 </div>
             </div>
         </>

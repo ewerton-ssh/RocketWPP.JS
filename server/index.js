@@ -37,7 +37,7 @@ app.get('/webcache', (req, res) => {
 app.use(express.static(path.join(__dirname, './dist')));
 
 app.get('/', (req, res) => {
-    if (req.url === '/') {
+    if (req.url === '/front') {
         // Read whatsapp html cache doc
         fs.readFile(path.join(__dirname, './dist', 'index.html'), (err, data) => {
             if (err) {
@@ -54,11 +54,29 @@ app.get('/', (req, res) => {
     }
 });
 
-app.get('*', (req, res) => {
+app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, './dist', 'index.html'));
 });
+
+app.get('/settings', (req, res) => {
+    res.sendFile(path.join(__dirname, './dist', 'index.html'));
+});
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, './dist', 'index.html'));
+});
+
+app.get('/bot', (req, res) => {
+    res.sendFile(path.join(__dirname, './dist', 'index.html'));
+});
+// Http site server
 
 // Console message
 server.listen(port, () => {
     console.log("Server on *:", port, '🚀');
 });
+
+app.post('/api/v1/rocketwpp/department', (req, res) => {
+    console.log(req.query.department);
+    res.send(200)
+})
