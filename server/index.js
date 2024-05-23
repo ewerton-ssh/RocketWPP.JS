@@ -75,8 +75,11 @@ app.get('/bot', (req, res) => {
 server.listen(port, () => {
     console.log("Server on *:", port, '🚀');
 });
+<<<<<<< HEAD
 
 app.post('/api/v1/rocketwpp/department', (req, res) => {
     console.log(req.query.department);
     res.send(200)
 })
+=======
+>>>>>>> a417e142d185fb1a90d29e5e5f7a89ae4a8a2fed
