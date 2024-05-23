@@ -12,7 +12,7 @@ async function botPath(id) {
         });
     })
     .then(doc => {
-        return { botPathText: doc.botText, botPathOptions: doc.botOptions };
+        return { botPathText: doc.botText };
     })
     .catch(err => {
         console.error('dbConnectors(chatBot):', err);

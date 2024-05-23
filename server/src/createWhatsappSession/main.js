@@ -23,11 +23,11 @@ const createWhatsappSession = (id, socket) => {
     }
 
     // Start new chat
-    const { startChat }= require('../startChat/main.js');
+    const { startChat } = require('../startChat/main.js');
     startChat();
     
     // Start new chat
-    const { startChatGroup }= require('../startChatGroup/main.js');
+    const { startChatGroup } = require('../startChatGroup/main.js');
     startChatGroup(); 
 
     // Start Webhook
