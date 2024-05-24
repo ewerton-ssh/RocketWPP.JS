@@ -4,12 +4,14 @@ services:
     build: .
     command: "pm2-runtime start server.config.js"
     working_dir: /home/node/RocketWPP.JS/server
-    networks:
-      - minha-rede
     expose:
       - "3001"
     ports:
       - "3001:3001"
+    networks:
+      - my_network
 
 
-
+networks:
+  my_network:
+    external: true
