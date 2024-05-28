@@ -1,6 +1,5 @@
 const axios = require('axios');
 const { settingsPath } = require('../settings/main.js');
-const { botPath } = require('../chatBot/main.js');
 const fs = require('fs');
 
 const { typebotStartChat } = require('../typeBot/startChat/main.js');
@@ -9,13 +8,6 @@ const typebotSessions = require('../typeBot/sessions/main.js');
 
 
 async function sendRocketMessage(message, hasMedia, id) {
-
-    //TypeBot
-    const { startChatResponse, typebotSessionId } = await typebotStartChat(id);
-    
-    //Bot config
-    const { botPathText } = await botPath(id);
-    const { botPathOptions } = await botPath(id);
 
     //Settings config
     const { settings } = await settingsPath();
@@ -164,6 +156,8 @@ async function sendRocketMessage(message, hasMedia, id) {
     // Create new visitor and manager bot & messages
     async function createVisitor(data, roomId) {
         if (data === 'newVisitor') {
+            //TypeBot
+            const { startChatResponse, typebotSessionId} = await typebotStartChat(id);
             await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
                 visitor: visitorHeader
             },
@@ -176,13 +170,14 @@ async function sendRocketMessage(message, hasMedia, id) {
                 .catch(error => {
                     visitorHeader = null;
                 });
-
+            
             await message.reply(startChatResponse);
-
         } else if (data === 'closedRoom') {
 
             const { chatResponse, department } = await typebotResponseChat(typebotSessions[visitorHeader.token], body);
-            if(chatResponse !== null){
+            const { startChatResponse, typebotSessionId, startChatDepartment } = await typebotStartChat(id);
+            
+            if (chatResponse !== null) {
                 await message.reply(chatResponse);
             } else {
                 typebotSessions[visitorHeader.token] = typebotSessionId;
@@ -190,7 +185,7 @@ async function sendRocketMessage(message, hasMedia, id) {
             };
 
             //Choose department
-            if(department !== null){
+            if (department !== null || startChatDepartment !== null) {
                 if (getInfoChat.isGroup) {
                     nickSender = `(${getInfoChat.name})`;
                     visitorHeader = {
@@ -198,8 +193,8 @@ async function sendRocketMessage(message, hasMedia, id) {
                         name: nickSender,
                         username: number,
                         phone: id + '@' + number,
-                        department: department.department
-                    }
+                        department: startChatDepartment ? startChatDepartment.department : department.department
+                    };
                 } else {
                     nickSender = message._data.notifyName;
                     visitorHeader = {
@@ -207,10 +202,10 @@ async function sendRocketMessage(message, hasMedia, id) {
                         name: nickSender,
                         username: number,
                         phone: id + '@' + number,
-                        department: department.department
-                    }
-                };
-    
+                        department: startChatDepartment ? startChatDepartment.department : department.department
+                    };
+                };                
+
                 await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
                     visitor: visitorHeader
                 },
