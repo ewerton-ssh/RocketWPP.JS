@@ -1,18 +1,10 @@
 #!/bin/bash
-
-# Pausa inicial para uma melhor visualização
-read -p "Pressione Enter para continuar..."
-
-# Pergunta ao usuário se deseja instalar o RocketWPP.JS
-read -p "Deseja instalar o RocketWPP.JS? [Y/N]: " answer
-
-# Verifica a resposta do usuário
+read -p "Press for continue..."
+read -p "Install RocketWPP.JS? [Y/N]: " answer
 if [[ "$answer" == [Yy] ]]; then
-    echo "Instalando RocketWPP.JS..."
+    echo "Installing RocketWPP.JS..."
     npm install pm2@5.3.1 -g && npm install && pm2 start server.config.js && pm2 startup && pm2 save
 else
-    echo "Instalação do RocketWPP.JS cancelada."
+    echo "Install exit"
 fi
-
-# Pausa final antes de sair
-read -p "Pressione Enter para sair..."
+read -p "Press Enter for exit..."
