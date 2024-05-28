@@ -13,8 +13,17 @@ services:
     container_name: rocketwpp
     hostname: rocketwpp
     restart: always
+    volumes:
+      - rocketwpp_database_data:/home/node/RocketWPP.JS/server/database
+      - rocketwpp_wwebjs_auth_data:/home/node/RocketWPP.JS/server/.wwebjs_auth
+      - rocketwpp_wwebjs_cache_data:/home/node/RocketWPP.JS/server/.wwebjs_cache
 
 
 networks:
   ewerton_default:
     external: true
+
+volumes:
+  rocketwpp_database_data:
+  rocketwpp_wwebjs_auth_data:
+  rocketwpp_wwebjs_cache_data:
