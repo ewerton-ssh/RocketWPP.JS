@@ -24,7 +24,7 @@ async function typebotResponseChat(sessionId, body) {
             }
         });
 
-        // Set department
+        // Filter out department lines and set department
         const lines = concatenatedMessage.trim().split('\n');
         const filteredLines = lines.filter(line => {
             const match = line.match(/^department=(\w+)$/);
