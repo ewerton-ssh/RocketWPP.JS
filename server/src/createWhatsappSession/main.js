@@ -41,7 +41,7 @@ const createWhatsappSession = (id, socket) => {
         }),
         webVersionCache: {
             type: 'remote',
-            remotePath:'http://localhost:3001/webcache'
+            remotePath:process.env.WHATSAPP_WEB_CACHE,
         },
         puppeteer: {
             executablePath: process.env.CHROME_EXECUTABLE_PATH,

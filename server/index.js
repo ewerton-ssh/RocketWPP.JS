@@ -14,25 +14,6 @@ const port = process.env.PORT;
 const io = require('./src/webSockets/main.js');
 io.on('', () => {});
 
-// Http webCache wwebjs server
-app.get('/webcache', (req, res) => {
-    if (req.url === '/webcache') {
-        // Read whatsapp html cache doc
-        fs.readFile(path.join(__dirname, './webCache', '2.2409.2.html'), (err, data) => {
-            if (err) {
-                res.writeHead(500);
-                res.end('Internal server error');
-            } else {
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
-                res.end(data);
-            }
-        });
-    } else {
-        res.writeHead(404);
-        res.end('Page not found, error 404');
-    }
-});
-
 // Http site server
 app.use(express.static(path.join(__dirname, './dist')));
 
