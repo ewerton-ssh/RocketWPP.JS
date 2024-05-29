@@ -124,7 +124,7 @@ For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, ju
 <br />
 <p align="center">
   <a href="https://github.com/ewerton-ssh" target="_blank">
-    <img src="https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4" alt="profile-pic" height="150" width="150" style="border-radius:50%">
+    <img src="https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4" alt="profile-pic" style="border-radius: 50%; width: 150px; height: 150px;" />
   </a>
 </p>
 <p align="center">
