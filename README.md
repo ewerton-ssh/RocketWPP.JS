@@ -50,29 +50,9 @@ Follow the form below and avoid mistakes.
 ### Case Dialogs(JSON):
 ```json
 {
-  "welcome_text": "Bem-vindo a EMPRESA Teste! Escolha uma opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Department 2",
-  "bot_response": "Segue nossos horarios no link:",
-  "error": "Opção invalida, por gentileza digite apenas os números abaixo, opção:\n*1* - HORARIOS\n*2* - Department 1\n*3* - Department 2",
-  "success": "Ok, já transferimos para o setor selecionado, por gentileza aguarde o atendimento 😉\n\nCaso o chat permaneça sem interação por mais de 5 minutos, o atendimento será encerrado automaticamente!",
   "no_service": "Desculpe, mas no momento não temos ninguém no setor para atende-lo, tente outro setor por gentileza.",
   "close": "Atendimento encerrado!",
   "start_chat_error": "_Número ou comando invalido, verifique por favor!_"
-}
-```
-
-### Case Options (JavaScript):
-```javascript
-function options(option) {
-    switch (option) {
-        case '1':
-            return 'bot_response';
-        case '2':
-            return 'Department_1';
-        case '3':
-            return 'Department_2';
-        default:
-            return 'falseOption';
-    }
 }
 ```
 
