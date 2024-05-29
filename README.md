@@ -45,8 +45,8 @@ $ docker-compose -f "docker-compose.yml" up -d --build
 </p>
 <br />
 Typebot share link exemple:
-URL: https://typebot.youdomain.com:3006/551199999999(set the share link equal to the connector number)
-- Import The JSON exemple for typebot [@DOWNLOAD](https://raw.githubusercontent.com/ewerton-ssh/RocketWPP.JS/88ff7e468c9575ee5fdba1cc89440799d3064810/typebot_exemple_export.json)
+URL: https://typebot.youdomain.com:3006/551199999999(set the share link equal to the connector number)  
+- [@Import The JSON exemple for typebot, Download](https://raw.githubusercontent.com/ewerton-ssh/RocketWPP.JS/88ff7e468c9575ee5fdba1cc89440799d3064810/typebot_exemple_export.json)
 
 ## Requires version installed on your server
 - NPM 10.2.3
@@ -121,6 +121,8 @@ For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, ju
 
 ## Congratulations and credits
 For lib _Typebot_
-- [@typebot](https://typebot.io/)
+- [@typebot](https://typebot.io/)  
+
+
 For lib _Whatsapp.web-js_
 - [@whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js)
