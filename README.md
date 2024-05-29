@@ -33,6 +33,21 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 Paste in terminal:
 $ docker-compose -f "docker-compose.yml" up -d --build
 
+<br />
+<p align="center">
+  <a href="https://typebot.io/#gh-light-mode-only" target="_blank">
+    <img src="./.github/images/logo-light.png" alt="Typebot illustration" width="350px">
+  </a>
+  <a href="https://typebot.io/#gh-dark-mode-only" target="_blank">
+    <img src="./.github/images/logo-dark.png" alt="Typebot illustration" width="350px">
+  </a>
+</p>
+<br />
+
+## Configure Typebot
+Typebot share link exemple:
+URL: https://typebot.youdomain.com:3006/551199999999(set the share link equal to the connector number)
+
 ## Requires version installed on your server
 - NPM 10.2.3
 - Node 20.10.0
@@ -41,7 +56,7 @@ $ docker-compose -f "docker-compose.yml" up -d --build
 
 ## For use
 ### server/.env
-- Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome).
+- Adjuste CHROME_EXECUTABLE_PATH directory(this project use puppeteer, and pupperter use your installed chrome or chromium in Docker).
 - Adjuste HEADLESS true or false(pupeeteer control open or close web browser, set "false" if you use proxy).
 
 ## Chatbot syntax save
