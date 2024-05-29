@@ -127,11 +127,7 @@ Developer: [@ewerton-ssh](https://github.com/ewerton-ssh)
 <p align="center">
   <a href="https://github.com/ewerton-ssh" target="_blank">
     ewerton-ssh
-    <img src="https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4" alt="Typebot illustration" width="350px">
-  </a>
-  <a href="https://github.com/ewerton-ssh" target="_blank">
-    ewerton-ssh
-    <img src="https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4" alt="Typebot illustration" width="350px">
+    <img src="https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4" alt="profile-pic" width="50px">
   </a>
 </p>
 <br />
