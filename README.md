@@ -134,6 +134,18 @@ For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, ju
 </p>
 <br />
 
+<!-- Markdown para adicionar a imagem -->
+![Descrição da imagem](https://avatars.githubusercontent.com/u/88050094?s=400&u=9eccb6509cecf70dadf97016773f970dea5cb887&v=4)
+
+<!-- HTML e CSS para estilizar a imagem -->
+<style>
+    img {
+        border-radius: 50%;
+        width: 150px; /* Ajuste o tamanho conforme necessário */
+        height: 150px; /* Ajuste o tamanho conforme necessário */
+    }
+</style>
+
 For lib _Typebot_
 - [@typebot](https://typebot.io/)  
 
