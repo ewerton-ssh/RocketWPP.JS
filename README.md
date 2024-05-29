@@ -135,6 +135,12 @@ For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, ju
 </p>
 <br />
 
+<a href="https://github.com/ewerton-ssh/RocketWPP.JS/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ewerton-ssh/RocketWPP.JS" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
+
 For lib _Typebot_
 - [@typebot](https://typebot.io/)  
 
