@@ -33,20 +33,20 @@ If you wants for help, enter this whatsapp group: [RocketWPP.JS Help](https://ch
 Paste in terminal:
 $ docker-compose -f "docker-compose.yml" up -d --build
 
+## Configure Typebot
 <br />
 <p align="center">
   <a href="https://typebot.io/#gh-light-mode-only" target="_blank">
-    <img src="./.github/images/logo-light.png" alt="Typebot illustration" width="350px">
+    <img src="https://raw.githubusercontent.com/baptisteArno/typebot.io/main/.github/images/logo-dark.png" alt="Typebot illustration" width="350px">
   </a>
   <a href="https://typebot.io/#gh-dark-mode-only" target="_blank">
-    <img src="./.github/images/logo-dark.png" alt="Typebot illustration" width="350px">
+    <img src="https://raw.githubusercontent.com/baptisteArno/typebot.io/main/.github/images/logo-dark.png" alt="Typebot illustration" width="350px">
   </a>
 </p>
 <br />
-
-## Configure Typebot
 Typebot share link exemple:
 URL: https://typebot.youdomain.com:3006/551199999999(set the share link equal to the connector number)
+- Import The JSON exemple for typebot [@DOWNLOAD](https://raw.githubusercontent.com/ewerton-ssh/RocketWPP.JS/88ff7e468c9575ee5fdba1cc89440799d3064810/typebot_exemple_export.json)
 
 ## Requires version installed on your server
 - NPM 10.2.3
@@ -111,9 +111,7 @@ $ npm install
 
 $ npm run build
 
-### After create DIST paste, run the comand in root DIST directory: 
-
-$ pm2 serve --spa --port 3002
+### After create DIST paste, move DIST to server paste: 
 
 ## _ChatBot_(Basic chatbot, modify for client side)
 
@@ -122,5 +120,7 @@ For config the ChatBot JSON, don't modify field for objects, only strings
 For config the Chatbot JS, don't modify **"default: return 'falseOption';"**, just case 1, 2, 3...
 
 ## Congratulations and credits
-For lib Whatsapp.web-js
-- [@pedroslopez](https://github.com/pedroslopez)
+For lib _Typebot_
+- [@typebot](https://typebot.io/)
+For lib _Whatsapp.web-js_
+- [@whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js)
