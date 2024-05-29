@@ -47,7 +47,7 @@ $ docker-compose -f "docker-compose.yml" up -d --build
 
 ### Typebot share link exemple:  
 - URL: https://typebot.youdomain.com:3006/551199999999/  (set the share link equal to the connector number)  
-- Import The JSON exemple for typebot[Download](https://downgit.github.io/#/home?url=https://github.com/ewerton-ssh/RocketWPP.JS/blob/main/typebot_exemple_export.json)
+- Import The JSON exemple for typebot [Download](https://downgit.github.io/#/home?url=https://github.com/ewerton-ssh/RocketWPP.JS/blob/main/typebot_exemple_export.json)
 
 ## Requires version installed on your server
 - NPM 10.2.3
