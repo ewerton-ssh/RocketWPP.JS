@@ -100,6 +100,8 @@ export default function Add() {
             ) : loading === 'loaded' ? (
               <QRCode
                 size={256}
+                fgColor="#021713"
+                level="L"
                 style={{ height: "auto", maxWidth: "100%", width: "100%", marginTop: "20px" }}
                 value={qrCode}
                 viewBox={`0 0 256 256`}

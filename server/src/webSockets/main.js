@@ -107,14 +107,13 @@ io.on("connection", (socket) => {
                 if (err) {
                     console.error('Delete connector error:', err);
                     return;
-                }
+                };
                 if (numRemoved > 0) {
-                    const phoneNumber = data.number;
-                    const sessionFolder = path.join(__dirname, ".wwebjs_auth", `session-${phoneNumber}`);
+                    const sessionFolder = path.join(__dirname, "..", "..", ".wwebjs_auth", `session-${data.number}`);
                     if (fs.existsSync(sessionFolder)) {
                         fs.rmSync(sessionFolder, { recursive: true });
                     }
-                }
+                };
             });
         }
         deleteConnectors();
