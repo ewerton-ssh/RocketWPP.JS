@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import data from "../../public/host.json"
+import data from "../../json/host.json"
 
 const socket = io.connect(
     `${data.ip}`,

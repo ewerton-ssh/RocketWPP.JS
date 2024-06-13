@@ -25,7 +25,6 @@ async function sendRocketMessage(message, hasMedia, id) {
     const getInfoChat = await message.getChat();
     const body = message.body;
     const number = message.from;
-    let nickSender = null;
     let visitorHeader = null;
     let mediaHeader = null;
     let messageData = null;
@@ -111,7 +110,7 @@ async function sendRocketMessage(message, hasMedia, id) {
             messageData = {
                 token: getInfoChat.name + '_group',
                 rid: roomId,
-                msg: `*${message._data.notifyName}*\n${message.body}`
+                msg: `*${message._data.notifyName}:* ${message.body}`
             }
         } else {
             messageData = {
@@ -134,49 +133,28 @@ async function sendRocketMessage(message, hasMedia, id) {
 
     // Header of visitors
     if (getInfoChat.isGroup) {
-        nickSender = `(${getInfoChat.name})`;
         visitorHeader = {
             token: getInfoChat.name + '_group',
-            name: nickSender,
+            name: `(${getInfoChat.name})`,
             username: number,
             phone: id + '@' + number,
         }
     } else {
-        nickSender = message._data.notifyName;
         visitorHeader = {
             token: number,
-            name: nickSender,
+            name: message._data.notifyName,
             username: number,
             phone: id + '@' + number
         }
     };
 
-
-
     // Create new visitor and manager bot & messages
     async function createVisitor(data, roomId) {
-        if (data === 'newVisitor') {
-            //TypeBot
-            const { startChatResponse, typebotSessionId} = await typebotStartChat(id);
-            await axios.post(`http://${adress}/api/v1/livechat/visitor/`, {
-                visitor: visitorHeader
-            },
-                {
-                    headers: headers
-                })
-                .then(response => {
-                    typebotSessions[visitorHeader.token] = typebotSessionId;
-                })
-                .catch(error => {
-                    visitorHeader = null;
-                });
+        if (data === 'newVisitor' || data === 'closedRoom') {
             
-            await message.reply(startChatResponse);
-        } else if (data === 'closedRoom') {
-
             const { chatResponse, department } = await typebotResponseChat(typebotSessions[visitorHeader.token], body);
             const { startChatResponse, typebotSessionId, startChatDepartment } = await typebotStartChat(id);
-            
+
             if (chatResponse !== null) {
                 await message.reply(chatResponse);
             } else {
@@ -186,20 +164,19 @@ async function sendRocketMessage(message, hasMedia, id) {
 
             //Choose department
             if (department !== null || startChatDepartment !== null) {
+
                 if (getInfoChat.isGroup) {
-                    nickSender = `(${getInfoChat.name})`;
                     visitorHeader = {
                         token: getInfoChat.name + '_group',
-                        name: nickSender,
+                        name: `(${getInfoChat.name})`,
                         username: number,
                         phone: id + '@' + number,
                         department: startChatDepartment ? startChatDepartment.department : department.department
                     };
                 } else {
-                    nickSender = message._data.notifyName;
                     visitorHeader = {
                         token: number,
-                        name: nickSender,
+                        name: message._data.notifyName,
                         username: number,
                         phone: id + '@' + number,
                         department: startChatDepartment ? startChatDepartment.department : department.department
@@ -270,18 +247,16 @@ async function sendRocketMessage(message, hasMedia, id) {
         } else if (data === 'openedRoom') {
             //Rename Visitor Headers
             if (getInfoChat.isGroup) {
-                nickSender = `(${getInfoChat.name})`;
                 renameHeader = {
                     token: getInfoChat.name + '_group',
-                    name: nickSender,
+                    name: `(${getInfoChat.name})`,
                     username: number,
                     phone: id + '@' + number
                 }
             } else {
-                nickSender = message._data.notifyName;
                 renameHeader = {
                     token: number,
-                    name: nickSender,
+                    name: message._data.notifyName,
                     username: number,
                     phone: id + '@' + number,
                 }

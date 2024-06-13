@@ -44,7 +44,7 @@ async function webhook() {
                                 }
                                 return;
                             } else {
-                                await client.sendMessage(visitorData.username, `*${messageData[0].u.name}* \n${messageData[0].msg}`);
+                                await client.sendMessage(visitorData.username, `*${messageData[0].u.name}:* \n${messageData[0].msg}`);
                                 return;
                             };
                         };
