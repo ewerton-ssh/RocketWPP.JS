@@ -37,11 +37,11 @@ const createWhatsappSession = (id, socket) => {
     // New Client
     const client = new Client({
         authStrategy: new LocalAuth({
-            clientId: id,
+            clientId: id
         }),
         webVersionCache: {
             type: 'remote',
-            remotePath:process.env.WHATSAPP_WEB_CACHE,
+            remotePath:process.env.WHATSAPP_WEB_CACHE
         },
         puppeteer: {
             executablePath: process.env.CHROME_EXECUTABLE_PATH,
@@ -52,7 +52,7 @@ const createWhatsappSession = (id, socket) => {
                 '--disable-features=IsolateOrigins,site-per-process',
             ],
             headless: headless,
-            timeout: 30000,
+            timeout: 30000
         }
     });
 
