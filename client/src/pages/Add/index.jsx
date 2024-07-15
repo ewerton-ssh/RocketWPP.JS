@@ -112,8 +112,8 @@ export default function Add() {
                 <div className="success">
                 <FcApproval
                   style={{
-                    width: "500px",
-                    height: "500px",
+                    width: "100px",
+                    height: "100px",
                     marginTop: "10px",
                     marginLeft: "auto",
                     marginRight: "auto"
