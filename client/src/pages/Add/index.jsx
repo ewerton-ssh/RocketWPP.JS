@@ -100,7 +100,8 @@ export default function Add() {
             ) : loading === 'loaded' ? (
               <QRCode
                 size={256}
-                fgColor="#021713"
+                bgColor="transparent"
+                fgColor="#fff"
                 level="L"
                 style={{ height: "auto", maxWidth: "100%", width: "100%", marginTop: "20px" }}
                 value={qrCode}
@@ -111,8 +112,8 @@ export default function Add() {
                 <div className="success">
                 <FcApproval
                   style={{
-                    width: "100px",
-                    height: "100px",
+                    width: "500px",
+                    height: "500px",
                     marginTop: "10px",
                     marginLeft: "auto",
                     marginRight: "auto"
